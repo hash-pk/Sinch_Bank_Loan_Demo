@@ -1,0 +1,1390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Sinch Bank – MSME Loan</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --yellow: #FEBD3D;
+  --green: #017874;
+  --green-dark: #015f5b;
+  --green-light: #e6f4f4;
+  --dark: #1A1A2E;
+  --dark2: #16213E;
+  --gray: #6B7280;
+  --gray-light: #F3F4F6;
+  --white: #FFFFFF;
+  --danger: #EF4444;
+  --success: #10B981;
+  --font: 'Plus Jakarta Sans', sans-serif;
+  --mono: 'DM Mono', monospace;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --shadow: 0 4px 24px rgba(1,120,116,0.10);
+  --shadow-lg: 0 8px 40px rgba(1,120,116,0.18);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
+
+/* APP SHELL */
+#app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  background: var(--white);
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+}
+
+/* HEADER */
+.app-header {
+  background: var(--dark);
+  padding: 14px 20px 0;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+.header-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.logo-wrap {
+  background: var(--yellow);
+  border-radius: 10px;
+  width: 38px; height: 38px;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.logo-wrap img { width: 30px; height: 30px; object-fit: contain; }
+.bank-name {
+  color: var(--white);
+  font-size: 17px;
+  font-weight: 800;
+  letter-spacing: -0.3px;
+}
+.bank-name span { color: var(--yellow); }
+.uli-badge {
+  margin-left: auto;
+  background: rgba(254,189,61,0.15);
+  border: 1px solid rgba(254,189,61,0.4);
+  color: var(--yellow);
+  font-size: 10px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+/* PROGRESS BAR */
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding-bottom: 14px;
+}
+.step-dot {
+  flex: 1;
+  height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 4px;
+  transition: background 0.4s;
+}
+.step-dot.done { background: var(--yellow); }
+.step-dot.active { background: var(--green); }
+.step-label {
+  color: rgba(255,255,255,0.5);
+  font-size: 10px;
+  font-weight: 600;
+  margin-left: 4px;
+  white-space: nowrap;
+}
+
+/* CONTENT */
+.screen { display: none; flex-direction: column; flex: 1; animation: fadeSlide 0.35s ease; }
+.screen.active { display: flex; }
+@keyframes fadeSlide {
+  from { opacity: 0; transform: translateX(28px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+.screen-inner { padding: 24px 20px; flex: 1; overflow-y: auto; padding-bottom: 100px; }
+
+/* SCREEN HERO */
+.screen-title {
+  font-size: 22px; font-weight: 800; color: var(--dark);
+  line-height: 1.2; margin-bottom: 6px;
+}
+.screen-sub {
+  font-size: 13px; color: var(--gray);
+  line-height: 1.5; margin-bottom: 24px;
+}
+
+/* CARDS */
+.card {
+  background: var(--white);
+  border: 1.5px solid #E5E7EB;
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+  box-shadow: var(--shadow);
+}
+.card-green {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  border: none; color: var(--white);
+}
+.card-yellow {
+  background: linear-gradient(135deg, var(--yellow) 0%, #e8a820 100%);
+  border: none; color: var(--dark);
+}
+.card-dark {
+  background: var(--dark);
+  border: none; color: var(--white);
+}
+
+/* FORM ELEMENTS */
+.form-group { margin-bottom: 18px; }
+.form-label {
+  display: block;
+  font-size: 12px; font-weight: 700;
+  color: var(--gray); text-transform: uppercase;
+  letter-spacing: 0.8px; margin-bottom: 8px;
+}
+.form-input {
+  width: 100%;
+  border: 1.5px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  padding: 13px 16px;
+  font-size: 15px;
+  font-family: var(--font);
+  color: var(--dark);
+  background: var(--white);
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+}
+.form-input:focus {
+  border-color: var(--green);
+  box-shadow: 0 0 0 3px rgba(1,120,116,0.12);
+}
+.form-input.verified {
+  border-color: var(--success);
+  background: #f0fdf8;
+}
+.input-row {
+  display: flex; gap: 10px;
+}
+.input-prefix {
+  display: flex; align-items: center;
+  background: var(--gray-light);
+  border: 1.5px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  padding: 0 14px;
+  font-size: 14px; font-weight: 600; color: var(--dark);
+  white-space: nowrap;
+}
+
+/* OTP INPUT */
+.otp-grid {
+  display: flex; gap: 6px; margin: 12px 0;
+}
+.otp-box {
+  flex: 1;
+  height: 46px;
+  min-width: 0;
+  border: 2px solid #E5E7EB;
+  border-radius: 8px;
+  font-size: 18px; font-weight: 800;
+  font-family: var(--mono);
+  text-align: center;
+  color: var(--dark);
+  outline: none;
+  transition: all 0.2s;
+  background: var(--white);
+  padding: 0;
+}
+.otp-box:focus { border-color: var(--green); box-shadow: 0 0 0 3px rgba(1,120,116,0.12); }
+.otp-box.filled { border-color: var(--green); background: var(--green-light); }
+
+/* BUTTONS */
+.btn {
+  width: 100%; padding: 16px;
+  border: none; border-radius: var(--radius-sm);
+  font-family: var(--font); font-size: 15px; font-weight: 700;
+  cursor: pointer; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+}
+.btn-primary {
+  background: linear-gradient(135deg, var(--green) 0%, var(--green-dark) 100%);
+  color: var(--white); box-shadow: 0 4px 16px rgba(1,120,116,0.35);
+}
+.btn-primary:active { transform: scale(0.98); }
+.btn-yellow {
+  background: var(--yellow);
+  color: var(--dark); box-shadow: 0 4px 16px rgba(254,189,61,0.35);
+}
+.btn-outline {
+  background: transparent;
+  border: 2px solid var(--green);
+  color: var(--green);
+}
+.btn-ghost {
+  background: var(--gray-light);
+  color: var(--gray);
+}
+.btn-sm {
+  width: auto; padding: 10px 20px; font-size: 13px;
+}
+.btn-fixed {
+  position: fixed;
+  bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 100%; max-width: 430px;
+  padding: 16px 20px 28px;
+  background: white;
+  border-top: 1px solid #E5E7EB;
+  z-index: 50;
+  display: flex; flex-direction: column; gap: 10px;
+}
+
+/* INFO ROWS */
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+.info-row:last-child { border-bottom: none; }
+.info-label { font-size: 12px; opacity: 0.7; font-weight: 500; }
+.info-value { font-size: 15px; font-weight: 700; }
+
+/* FEATURE LIST */
+.feature-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  margin-bottom: 14px;
+}
+.feature-icon {
+  width: 36px; height: 36px;
+  background: var(--green-light);
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: var(--green); font-size: 15px; flex-shrink: 0;
+}
+.feature-text { flex: 1; }
+.feature-title { font-size: 14px; font-weight: 700; color: var(--dark); margin-bottom: 2px; }
+.feature-desc { font-size: 12px; color: var(--gray); line-height: 1.4; }
+
+/* CONSENT ITEMS */
+.consent-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid #F3F4F6;
+  cursor: pointer;
+}
+.consent-item:last-child { border-bottom: none; }
+.consent-check {
+  width: 22px; height: 22px;
+  border: 2px solid #D1D5DB;
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.2s;
+}
+.consent-check.checked { background: var(--green); border-color: var(--green); }
+.consent-check.checked::after { content: "✓"; color: white; font-size: 13px; font-weight: 800; }
+.consent-label { font-size: 13px; font-weight: 600; color: var(--dark); flex: 1; }
+.consent-sub { font-size: 11px; color: var(--gray); margin-top: 1px; }
+.data-icon { font-size: 18px; width: 32px; text-align: center; }
+
+/* DATA FETCH ANIMATION */
+.fetch-item {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px;
+  background: var(--white);
+  border: 1.5px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  margin-bottom: 10px;
+  transition: all 0.3s;
+}
+.fetch-item.fetching { border-color: var(--yellow); background: #fffbf0; }
+.fetch-item.done { border-color: var(--success); background: #f0fdf8; }
+.fetch-icon-wrap {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--gray-light);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; flex-shrink: 0;
+}
+.fetch-item.fetching .fetch-icon-wrap { background: rgba(254,189,61,0.15); }
+.fetch-item.done .fetch-icon-wrap { background: rgba(16,185,129,0.12); }
+.fetch-name { font-size: 13px; font-weight: 700; color: var(--dark); }
+.fetch-status { font-size: 11px; color: var(--gray); margin-top: 2px; }
+.fetch-item.fetching .fetch-status { color: #d97706; }
+.fetch-item.done .fetch-status { color: var(--success); }
+.fetch-indicator { margin-left: auto; }
+.spinner { width: 20px; height: 20px; border: 2px solid #E5E7EB; border-top-color: var(--yellow); border-radius: 50%; animation: spin 0.7s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.check-circle { width: 22px; height: 22px; background: var(--success); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 12px; }
+
+/* LOAN OFFER */
+.amount-display {
+  font-size: 36px; font-weight: 800; color: var(--white);
+  letter-spacing: -1px;
+}
+.amount-sub { font-size: 12px; color: rgba(255,255,255,0.7); margin-top: 2px; }
+.tenure-tabs {
+  display: flex; gap: 8px; margin: 16px 0;
+}
+.tenure-tab {
+  flex: 1; padding: 10px 4px;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  font-size: 13px; font-weight: 700;
+  text-align: center; cursor: pointer; color: var(--gray);
+  background: var(--white); transition: all 0.2s;
+}
+.tenure-tab.active {
+  border-color: var(--green);
+  background: var(--green-light);
+  color: var(--green);
+}
+.stat-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 12px; margin-bottom: 16px;
+}
+.stat-box {
+  background: var(--gray-light);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+}
+.stat-box-green {
+  background: var(--green-light);
+}
+.stat-label { font-size: 11px; color: var(--gray); font-weight: 600; margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+.stat-val { font-size: 18px; font-weight: 800; color: var(--dark); }
+.stat-val-green { color: var(--green); }
+
+/* REPAYMENT TABLE */
+.repay-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.repay-table th {
+  background: var(--dark); color: var(--white);
+  padding: 10px 8px; text-align: left; font-size: 11px; font-weight: 700;
+}
+.repay-table td { padding: 10px 8px; border-bottom: 1px solid #F3F4F6; color: var(--dark); font-weight: 500; }
+.repay-table tr:last-child td { border-bottom: none; }
+
+/* AGREEMENT */
+.agreement-scroll {
+  height: 180px;
+  overflow-y: scroll;
+  background: #FAFAFA;
+  border: 1.5px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  font-size: 12px; color: #4B5563; line-height: 1.7;
+  margin-bottom: 16px;
+}
+.agreement-scroll::-webkit-scrollbar { width: 4px; }
+.agreement-scroll::-webkit-scrollbar-thumb { background: var(--green); border-radius: 4px; }
+.checklist-item {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 10px; cursor: pointer;
+}
+.checklist-box {
+  width: 20px; height: 20px;
+  border: 2px solid #D1D5DB;
+  border-radius: 5px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0; transition: all 0.2s; font-size: 11px; font-weight: 800; color: white;
+}
+.checklist-box.checked { background: var(--green); border-color: var(--green); }
+.checklist-label { font-size: 13px; color: var(--dark); font-weight: 500; }
+
+/* MANDATE */
+.mandate-option {
+  display: flex; align-items: center; gap: 14px;
+  padding: 16px;
+  border: 2px solid #E5E7EB;
+  border-radius: var(--radius-sm);
+  margin-bottom: 12px;
+  cursor: pointer; transition: all 0.2s;
+}
+.mandate-option.selected { border-color: var(--green); background: var(--green-light); }
+.mandate-radio {
+  width: 20px; height: 20px;
+  border: 2px solid #D1D5DB;
+  border-radius: 50%; flex-shrink: 0; transition: all 0.2s;
+  display: flex; align-items: center; justify-content: center;
+}
+.mandate-option.selected .mandate-radio { border-color: var(--green); background: var(--green); }
+.mandate-option.selected .mandate-radio::after { content: ""; width: 8px; height: 8px; background: white; border-radius: 50%; }
+.mandate-icon { font-size: 22px; }
+.mandate-info { flex: 1; }
+.mandate-name { font-size: 14px; font-weight: 700; color: var(--dark); }
+.mandate-desc { font-size: 11px; color: var(--gray); margin-top: 2px; }
+
+/* SUCCESS */
+.success-screen {
+  display: flex; flex-direction: column; align-items: center;
+  padding: 40px 24px 120px;
+  text-align: center;
+}
+.success-icon {
+  width: 100px; height: 100px;
+  background: linear-gradient(135deg, var(--green), var(--green-dark));
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 24px;
+  box-shadow: 0 8px 32px rgba(1,120,116,0.35);
+  animation: popIn 0.5s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes popIn {
+  from { transform: scale(0); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+.confetti-wrap {
+  position: relative; margin-bottom: 24px;
+}
+.success-amount {
+  font-size: 40px; font-weight: 800;
+  color: var(--dark); letter-spacing: -1.5px; margin-bottom: 4px;
+}
+.success-tagline { font-size: 14px; color: var(--gray); margin-bottom: 28px; }
+.account-card {
+  background: var(--dark);
+  border-radius: var(--radius);
+  padding: 20px;
+  width: 100%;
+  text-align: left;
+  margin-bottom: 16px;
+}
+.account-label { font-size: 11px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+.account-number { font-size: 20px; font-weight: 800; color: var(--yellow); font-family: var(--mono); letter-spacing: 2px; }
+.whatsapp-notif {
+  display: flex; align-items: center; gap: 12px;
+  background: #f0fdf8;
+  border: 1.5px solid var(--success);
+  border-radius: var(--radius-sm);
+  padding: 14px;
+  text-align: left;
+  width: 100%;
+  margin-bottom: 16px;
+}
+.whatsapp-notif .wa-icon { font-size: 24px; flex-shrink: 0; }
+.wa-text { font-size: 12px; color: #065f46; font-weight: 500; line-height: 1.5; }
+
+/* DIVIDERS */
+.section-divider {
+  font-size: 11px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 1px;
+  color: var(--gray); margin: 20px 0 12px;
+  display: flex; align-items: center; gap: 10px;
+}
+.section-divider::before, .section-divider::after {
+  content: ""; flex: 1; height: 1px; background: #E5E7EB;
+}
+
+/* LOADING OVERLAY */
+#loading-overlay {
+  display: none;
+  position: fixed; inset: 0; z-index: 200;
+  background: rgba(26,26,46,0.85);
+  backdrop-filter: blur(4px);
+  align-items: center; justify-content: center;
+  flex-direction: column; gap: 16px;
+}
+#loading-overlay.show { display: flex; }
+.loading-spinner {
+  width: 52px; height: 52px;
+  border: 4px solid rgba(255,255,255,0.2);
+  border-top-color: var(--yellow);
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+}
+.loading-text { color: white; font-size: 14px; font-weight: 600; }
+
+/* ALERT TOAST */
+#toast {
+  position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: var(--dark); color: white;
+  padding: 12px 20px; border-radius: 30px;
+  font-size: 13px; font-weight: 600;
+  opacity: 0; transition: all 0.3s; z-index: 300;
+  white-space: nowrap;
+}
+#toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* VERIFIED BADGE */
+.verified-badge {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: #f0fdf8; border: 1px solid var(--success);
+  color: var(--success); padding: 6px 12px;
+  border-radius: 20px; font-size: 12px; font-weight: 700;
+}
+
+/* PHONE DISPLAY */
+.phone-display {
+  display: flex; align-items: center; gap: 12px;
+  background: var(--green-light);
+  border: 1.5px solid rgba(1,120,116,0.2);
+  border-radius: var(--radius-sm);
+  padding: 14px 16px; margin-bottom: 20px;
+}
+.phone-icon { color: var(--green); font-size: 18px; }
+.phone-num { font-size: 16px; font-weight: 800; color: var(--dark); font-family: var(--mono); letter-spacing: 1px; }
+.phone-label { font-size: 11px; color: var(--gray); }
+
+/* RESEND */
+.resend-row { text-align: center; margin-top: 12px; }
+.resend-btn { color: var(--green); font-weight: 700; font-size: 13px; cursor: pointer; background: none; border: none; font-family: var(--font); }
+
+/* ULI INFO STRIP */
+.uli-strip {
+  display: flex; align-items: center; gap: 10px;
+  background: linear-gradient(90deg, rgba(1,120,116,0.08), rgba(254,189,61,0.08));
+  border: 1.5px solid rgba(1,120,116,0.2);
+  border-radius: var(--radius-sm);
+  padding: 12px 14px; margin-bottom: 16px;
+}
+.uli-strip-icon { color: var(--green); font-size: 18px; flex-shrink: 0; }
+.uli-strip-text { font-size: 12px; color: var(--dark); font-weight: 600; }
+.uli-strip-text span { color: var(--green); }
+
+/* EMI HIGHLIGHT */
+.emi-highlight {
+  text-align: center;
+  padding: 16px;
+  background: var(--green-light);
+  border-radius: var(--radius-sm);
+  margin-bottom: 16px;
+}
+.emi-label { font-size: 11px; color: var(--gray); text-transform: uppercase; letter-spacing: 0.8px; font-weight: 700; }
+.emi-amount { font-size: 30px; font-weight: 800; color: var(--green); letter-spacing: -0.5px; }
+.emi-per { font-size: 12px; color: var(--gray); font-weight: 500; }
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- HEADER -->
+  <header class="app-header">
+    <div class="header-row">
+      <div class="logo-wrap">
+        <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQEASABIAAD/2wBDAAMCAgMCAgMDAwMEAwMEBQgFBQQEBQoHBwYIDAoMDAsKCwsNDhIQDQ4RDgsLEBYQERMUFRUVDA8XGBYUGBIUFRT/2wBDAQMEBAUEBQkFBQkUDQsNFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBT/wAARCADCAgADASIAAhEBAxEB/8QAHwAAAQUBAQEBAQEAAAAAAAAAAAECAwQFBgcICQoL/8QAtRAAAgEDAwIEAwUFBAQAAAF9AQIDAAQRBRIhMUEGE1FhByJxFDKBkaEII0KxwRVS0fAkM2JyggkKFhcYGRolJicoKSo0NTY3ODk6Q0RFRkdISUpTVFVWV1hZWmNkZWZnaGlqc3R1dnd4eXqDhIWGh4iJipKTlJWWl5iZmqKjpKWmp6ipqrKztLW2t7i5usLDxMXGx8jJytLT1NXW19jZ2uHi4+Tl5ufo6erx8vP09fb3+Pn6/8QAHwEAAwEBAQEBAQEBAQAAAAAAAAECAwQFBgcICQoL/8QAtREAAgECBAQDBAcFBAQAAQJ3AAECAxEEBSExBhJBUQdhcRMiMoEIFEKRobHBCSMzUvAVYnLRChYkNOEl8RcYGRomJygpKjU2Nzg5OkNERUZHSElKU1RVVldYWVpjZGVmZ2hpanN0dXZ3eHl6goOEhYaHiImKkpOUlZaXmJmaoqOkpaanqKmqsrO0tba3uLm6wsPExcbHyMnK0tPU1dbX2Nna4uPk5ebn6Onq8vP09fb3+Pn6/9oADAMBAAIRAxEAPwD7Qooor+XD9dCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK5X4hfFHwr8KtHXU/FWtW+j2jHbH5uWklPokags5/3QauePPGNl8PfBmteJNRybPS7WS6dQcF9oyEHuxwo9yK/Hr4p/FDXfi/4zvfEevXLT3M7bYoc/u7aIE7YkHZRn8TknJJNfW8P5DLOZylOXLTju1u32X6s8TM8yWAilFXk/6uz9A5v+CifwrjvvIW38QyxZx9pSxj8v8jKG/wDHa9m+GPxt8FfGGye48K67b6hJGMy2jZjuIvdomAYD3xg9jX401c0XXNR8N6nBqOk39zpmoQNuiurSVopEPqGUgivvcTwVgp07Yecoy89V81p+B83R4gxEZfvYpry0P3Eor4J+B/8AwUQurI2+lfEu1N5BkINdsIgJVHTM0Q4YdyyYOP4WNfb3hPxjofjrRYdX8P6pa6vps33Li0kDrnuD3DDuDgjuK/LsxyjGZXLlxENOjWqfz/R6n2GFx1DGRvSlr26mxRRRXjHeFFFFABRWB418e+Hvh1ocur+JNXtdIsIwf3lw+C5/uovV2/2VBNfC3x0/4KEatr/2jSPh1A+iaecq2s3Kg3Uo6fu05EY9zluhG017eW5NjM1lahD3esnol8/0V2efi8fQwavVevZbn2J8U/2gfAfwbCJ4o12K1vZF3x2ECNNcOOx2KCVB55bA4615Vp3/AAUL+E97e+RMdc0+LOPtNzYAx/XCOzf+O1+Z2oahdatezXl7czXl3OxkluLiQvJIx6lmOST7moa/T8PwVgYU7V5ylLurJfJWf43Pj6vEGIlO9OKS+8/bbwl400Lx7o0eq+HdWtNY0+TgT2kocA/3T3Vh6HBFbVfjz8AvjlrXwJ8cW2r6fM8mlyusepadnMdzDnnjoHAJKt2PsSD+vml6lba1plpqFnKJ7O7hSeGVejoyhlP4gg1+eZ7kk8mqpJ80JbP06Pz/ADPqctzCOPg21aS3X6otUUUV8weuFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQB4R+3Al0/7Mvi37MW4NoZQvUx/aos/0z7Zr8pq/brxZ4YsPGvhjVNB1SLztP1K2ktZ0HXaykEg9iM5B7ECvyB+NHwY8QfBHxlc6Hrdu5i3FrO/VCIbuLPDofXpleqng+/69wRjaXsamDbtO/MvNNJfhb8T4fiHDz9pGul7tremv63ODooor9QPjwrq/hz8VfFXwn1tdU8LaxcaXPkeZGjZhnH92SM/K4+o46jB5rlKKyqU4VoOFRJp7p6ouM5QkpRdmj9HPgb+3/4b8afZ9K8dRReFdYYBRqCk/YJm9ySTET/tZXj7w4FfWFvcRXlvHPBKk8Eih0kjYMrqehBHBFfhnXrPwW/ae8c/A+4SLSNQ+36IWBk0a/JktyM8lOcxt15UjPGQcYr81zXg2nUvVy98r/le3yfT53XofWYLPpQtDFK67rf59z9cru7gsbWW5uZo7e3iUvJLKwVEUDJJJ4AA718j/HP/AIKB6D4T+0aT8P4YvEmqr8p1ObIsYj324IaU/TC85y3SvkH40/tMeN/jjcsmtah9k0YPuh0exzHboO24dZG92J74x0ryqnlPBtOlarmD5n/Ktvm+v5eosbn053hhVZd3v8u39bHR+PfiR4m+J+tvq3ijWLnV7052mdvkiBOdsaDCovsoArnKKK/SqdOFKKhTVkui0R8nKUptyk7sKKKK0JCv2G/ZrjuY/gD4AW63CX+xrYgPnOzYNnX/AGdtfmd+zt8AdZ+PHja2sLeGa30C3kD6nqe35IYxyUB6GRuij3yeAa/XOwsLfS7G2s7SJYLW3iWGKJPuoijCqPYAAV+T8b42lJUsJF3knd+Wll959rw9h5pzrtaPReZYooor8pPswooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiikJABJOAPWgBahvLy30+2kubqeK2t4xueWZwiIPUk8AV8v/AB+/bt8N/DZ7nRvCCQ+KfEUeUecPmytm9GZTmQj+6hx6sCMV8HfEv44eNvi7ePN4n8QXV9CW3JYq3l2sXptiXCg++M+pNfbZXwpjMelVq/u4Pvu/Rf52Pn8ZnVDDNwh70vLb7z9IfHn7a/wn8CyPB/b58QXaZzDocf2kf9/MiP8AJq8T8Rf8FNLZGdNC8CSyr/DPqOoBD+MaI3/odfCNFfoOG4Pyyiv3ic35u34Kx8xVzzGVH7rUfRf53Pru6/4KVeOnfNt4Y8PRL6SrO5/MSCi1/wCClXjpJAbnwv4elTPIiE8Zx9TI38q+RKK9P/VzKrW9gvx/zOP+1cb/AM/H+B92+H/+CmtuxVNb8CSRDjdNp+oh/rhHQf8AoVev+DP27PhN4uaOK41e68O3D8CPWLYouf8ArohdAPcsK/LOivNxHCGV1l7kXB+T/wA7nXSzzGU/ial6r/Kx+4Gh+IdL8T6fHf6PqVpqtjJ9y5sp1mjb6MpIrQr8SPCnjfxB4E1H7f4d1m+0W84Blsp2iLD0bB+YexyK+rvhJ/wUY17R5YLLx/pia7ZYCnUtPRYbtfVmTIR/oNn1NfFY/gzF4dOeFkqi7bP/ACf3/I+gw2fUKnu1lyv70foTWJ4v8FaD4+0WbSPEWk2usadL96C6jDAHpuU9VYdmBBHY1k/Db4v+EPi7pZv/AArrdvqaIAZoFJSeAntJG2GXvyRg44Jrsa+DlGrhqlpJxnH5NfqfSJwrQurOL+aPgX43/wDBO+904T6r8Nrs6hbKC7aJqEgE6+0UmAG9g+D/ALTGvjXWtD1Hw3qc+natYXOmahA22W1u4mikQ+hVgCK/cSvM/jl8KPh58RPC11P48trO1tbWIt/bTusE9oPVZj0HT5TlScZBr9Byni/EUXGjjV7Rd18X/B/P1PmMbkdKadTDvlfbp/wD8e6K6L4haX4c0bxdf2fhPWbjX9CifFvf3Nt9naQf7pOSP9ohc/3RXO1+xQmqkVNLfurP7nsfCSjytxfQKKKK0JCiiigAoojjaZ1RFLuxCqqjJJPQAV9QfA39g7xb8RRb6p4saXwjoL4YRyp/p06/7MZ/1YPq/PfaRXn4zH4bL6ftcTNRX4v0W7OmhhquJlyUo3Z84eHPDWq+LtYt9K0TTrnVNSuG2xWtrGZHb8B2Hc9B3r7X+Bn/AATvx9n1b4m3Wf4l0Cwl/SaZfx+WM+nz9RX1n8L/AIN+Efg5o50/wtpEVgHAE903z3FwR3kkPJ7nHQZOAK7WvyXNeMMRib0sEuSPf7T/AMvlr5n22CyKlRtPEe8+3T/g/wBaGb4e8N6V4S0i30rRdPttL063XbFbWsYRFH0Hf36mtKiuT+IvxV8KfCfRzqfinWrfSrdsiNJCWlmI7RxjLMfoOO+K+AjCpiKnLFOUn822fTNwpRu3ZL7jrKpavreneH7CS+1W/tdMsoxl7m8mWKNfqzEAV8FfFz/gozrGpyTWPw90pNItOVGqamgluW/2kjyUT/gW/wCgr5N8X+O/EXj/AFI3/iPWr3WrvtJeTM+32UHhRx0AAr73AcG4zEJTxUlTXbd/5L7/AJHzeJz6hS92iuZ/cj9NPGn7c/wl8INJFFrVx4iuUyDFo1sZB+Ej7Yz+DGvHfEP/AAU0tkdk0LwJLMn8M2oagIz+MaI3/oVfCNFfbYfg/K6K9+Lm/N/5WPn6ueYyp8LUfRf53Pru7/4KVeOnkzbeGPD0Kf3ZhO5/MSL/ACpLf/gpV47V8z+GfDsiZHEazofzMp/lXyLRXpf6uZVa3sF+P+Zx/wBq43f2j/A+7fDv/BTSB3VNd8CyRpkbptO1AOffCOg/9Cr2zwF+2x8KPHckcB11/D95IQBBrkX2fk/9NATGPxavymorzMTwfllZfu04Pyd/zudlLPMZTfvNSXmv8rH7k2d7b6laRXVpPFdW0q7o5oXDo49QRwRU9fjJ8N/jR40+Et4J/C/iC702Pfve0Db7eU/7cTZU8cZxn0Ir7q+Av7fHh3x5JbaN43jh8La4+ES9DEWE7cfxE5iJ/wBolf8AazgV+f5nwnjMAnUo/vILtuvVf5XPpsHnVDEtQqe7Lz2+/wDzPrGikVgyhlIKkZBHQ0tfEH0IUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQBX1HUbXSLC5vr64itLO3jaWaedwiRoBksxPAAAzmvzi/am/bT1D4ly3nhfwXPNpnhMFop71cpPqI6EHukR5+Xqw+9jO0af7cn7TsnjHWLn4e+GrrGgWMm3U7qJv8Aj8uFPMYIPMaED6sPRQT8g1+w8M8OQpQjjsZG8nrFPp5vz7dvXb4XN81lOTw9B6dX38vT8/QKKKK/TT5EKKKKACiiigAooooAKKKKANPw14p1fwbrMGq6HqVzpOpQHMdzaSmNx7ZHUHuDwe9fa/wL/wCChyP9m0j4mWvlnIRdfsIyRj1niHP1aP1HydTXwrRXj5jlOEzSHLiYXfRrRr0f6bHfhcbXwcr0pfLofsX45+P3gjwH8O08aXWt219o84xZNYyLK15JziOIA8twc5wFwd2MGvzI+PP7R3in49a4ZtUnNlokEhNlo8DHyYR2Lf33x1Y++AoOK8sMrtEsZdjGpLBM8AnGTj3wPyFJXk5Pw3hcpk6t+efRtbLy8+7/ACO3HZrWxqUPhj2XX+uwUUUV9ceGFFFdT8O/hb4p+K2tjSvCujXGq3QwZGjG2KFT/FI5wqD6kZ7c1nUqQpRc6jSS3b0RcYynJRirtnLV658Ff2XfHHxvmjm0uw/s3QyTv1rUFZLfg4ITjMh68KMZ6kV9g/Az9gLw34JNvq3jiWLxVrKEOtiqkWMJ9Cp5mP8AvAL/ALPevq+3t4rOCOCCJIII1CJFGoVVUdAAOAK/NM14yp070svXM/5nt8l1+enqfWYLIZStPFOy7Lf5ni3wQ/ZI8D/BNIbyC1/t7xGmC2sajGC6N/0xTkRDr0y3OCxr22iivyrE4qvjKjq4iblJ9WfZ0qNOhHkpRsgqnq+sWGgadPqGp3sGn2EC75bm6kEccY9SxOBXgfx1/bW8GfCP7TpmlyL4q8TR5Q2dnIPIt3/6ayjIBB6quW4wdvWvz7+L3x+8afG3UfP8SaqzWaNug0u1zHaQf7seTk8n5mJbnrivqcp4XxmY2qVf3dPu936L9Xp6nj43OKGFvGHvS7Lb5s+tfjr/AMFDLPTPtGkfDW3XULkZRtdvIz5KHp+6iPLn0ZsD/ZYV8O+K/GGt+Otbn1fxBqlzq+pTHL3F1IWb6DsoHYDAHYVkUV+w5bk+DyuHLh4a9W9W/n+i0PhcVjq+MlerLTt0CiiivaPPCiiigAooooAKKKKACiiigD6j/ZX/AGytS+Ft3Z+GfF1xLqXg128uO4fLz6dnoVPVovVOo6r02n9JdO1G11ewt76xuIruzuY1lhnhcOkiMMhlI4II71+G9fWn7D/7TkngLXYPAniW8/4prUZdtjcTvxYXDHhcnpG5PPZWOeAWNfmfE3Dka0JY3BxtNayS6+a8+/f13+tyjNXTksPXfuvZ9vL0/L0P0cooor8dPuwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAK8A/bM+OjfBr4YPbaZOYvEuul7SxZCN0CADzZv8AgIIUf7Tqexr3+vyd/bH+KDfE745608TltM0ZjpNouSQRExEjjt80hc59NvpX1vDOWrMcevaK8Ie8/Psvm/wTPFzfFvC4Z8r96Wi/VniLMXYsxJYnJJ6k0UUV/QB+YhRRX25+xX+yNbaxZ2XxD8bWQntX/e6RpNymUlXtcSqeqnqing/e5BFeXmWZUMrw7xFd+i6t9kduEwlTGVVSp/8ADI8n+BH7FnjL4xW8GrX5Hhbw1JhkvbyIma4X1hi4JH+0xUHPG6vsrwD+wz8KvBUMTXekS+J75eWudYlLqTjnES4THsQT7mvoEAAAAYApa/Ecw4lzDHydpuEe0dPve7/LyP0LC5RhcMlePM+7/wAtjm9M+GnhHRIli0/wrotjGowFttPhjA/JafqHw68KatGY77wxo17HjG240+KQY9MFa6GivmvbVb83O7+rPV9nC1uVHiPjL9jH4SeMkkL+FotGuW6XGjSNalfog/d/mhr5r+J3/BN7WtMSa78C69FrMSgsunaoBBcewWUfI5PuEFfoFRXuYPiDMsE1yVW12lqvx1XyaPPr5ZhMQvegk+60PxH8W+DNd8CazLpXiHSbvR9Qj6wXcRQkf3lzwynswyD2NY9ftb46+Hfhv4l6I+k+JtHttXsm5VZ0y0Z/vIw+ZG91INfC3xy/4J76z4cNxq3w8uJNe01QXbSblgLyP2RsBZR7cN0GG61+nZVxdhcZaniv3c//ACV/Pp8/vPkMZklahedH3o/j93X5fcfHdFT6hp13pF9PZX1rNZXkDmOW3uIzHJGw6qykZBHoagr71NNXR83sFFFFMQVa0jRr/wAQalBp+mWVxqN/cNsitraMySSN6KoyTX0H8DP2IfGfxVNtqeto/hPw25DefeRn7VOvX91EecHj5mwOcjd0r9APhJ8BfBnwU0wW3hrSkjumQLPqdxiS6uP958cD/ZUBfavi814pweX3p0v3lTstl6v9Fr6Hv4LJ6+KtKfux89/kj5H+Bn/BPK91L7Pq3xKuW062yHXQrKQGaQdcSyjIQeqrk4/iU19w+EfBmh+AtEg0fw9pVrpGmwj5be1jCgnuzHqzHuxyT3NbVFfj+Y5vjM0nzYienRLRL5fq9T7rC4Ghg42pR179QorH8V+MNE8DaNNq3iDVLbSNOhHz3F1IEXPoO5J7AZJ7V8PfHX/goZeah9o0j4aW5sbY/I2u3sYMzjv5URGE/wB5sn/ZU0suyjGZpPlw8NOreiXz/RXYYrHUMHG9WWvbqfWvxd+Pngv4J6abjxLqqJdsu6DTLbEl3P8A7qZ4H+0xC+9fn18dP21/GfxaFzpmlu3hbw1JuQ2lnIfPnTp+9l6nI6quB2OeteBavrN/4g1KfUNTvZ9Qvp2LzXNzIZJJG9SxJJqrX7DlPC+Dy61Sr+8qd3svRfq9fQ+FxucV8VeMPdj2W/zYUUUV9oeAFFFPtraW8uI4IInnnkYIkUalmcngAAdT7Um7DGVq+F/CWteNdXi0rQNLu9Y1GX7tvZxGRsepx0A7k8CvqL4F/wDBP/xD4wNvq3j2WXwxpBIcaagBvp19GByIR/vZbqCo6195fD/4Z+GPhboaaV4Y0e20m0UAOYl/eTEfxSOfmdvdia+EzXi3C4K9PDfvJ+Xwr59fl959HgskrYi06vux/H7v8z4e+GH/AATh1/V44rvxxrkOgwsAx0/TgLi5/wB1pD8iH6bxX0x4O/Yu+Eng6OPb4YTWrhetxrMrXJf6ocR/kor3CivzDGcQ5ljW+eq4rtHRfhq/m2fX0MrwmHXuwu+71/r5HPaf8OvCmkRCOx8MaNZRgYCW+nxRgD6BRTdS+G3hHWYjHqHhbRb6M9UudPhkB/BlNdHRXhe2q35ud39Wel7OFrcqPAPHv7Dnwp8awSG20aTwzetnbc6NKYwD2zE26PH0UH3r40+On7FHjP4QW9zq2n48VeG4gXe8s4iJ7dBzmWLkgAZyylgMZO2v1KpCAQQRkH1r6TL+JcwwElebnHtLX7nuvy8jycVlOFxKdo8r7r/LY/DCivuD9tP9kaDTLa/+Ifgq0EMCZm1fSYE+VB/FcRAdB3deg5YcZr4fr9uyzMqGaYdYig/VdU+zPz3F4Spg6rp1Pl5oKKKK9Y4j9S/2Kvjmfi98L00/U5/N8SeHwlpds5y08WD5M3uSFKn/AGkJP3hX0LX5N/sc/E9/hj8dNEkklCaZrDDSbwMflCysAjH02yBDnsN3rX6yV/P3E+WrLse/Zq0J+8v1X3/g0fpuUYt4rDLmfvR0f6BRRRXyR7YUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQByvxV8Xf8ACBfDXxP4iBAk03Tp7iLPeQIdg/Fto/GvxZkkaWRpHYu7HczMckk9STX6pft0ay+k/s2eI0jO172a1tcgdjOjH8whH41+Vtfs3BFBRwdWv1lK3yS/4LPguIajdeFPsr/e/wDgBRRRX6QfKHrP7LnwgX41fF/StEu0Z9Gtwb7UtpIzAhHyZHTexROORuJHSv1zt7eK0gjggjSGGNQiRxqFVFAwAAOgA7V8Yf8ABNHwlHB4V8YeJ3jBmur2PTo5COVWNBIwHsTKmf8AdFfadfhHF2NlicxdG/u09F6vVv8AT5H6PkeHVHCqp1lr8un9eYUUUV8QfQhRRRQAUUUUAFFFFAHxP/wUqh0Kz8O+FHGl2g8R315If7REYE5t4owGQsOSN0kfXOMcYzz8D19uft4eGfEXxT+N/hTwl4Y0u51m+ttI+0GG3XKxGWZwWdjhUGIl5YgdK634G/8ABPbR/Dwg1b4i3EevagAHXR7VmW0iPX943DSnpxwvUHcOa/aMqzXCZNk9H6zO8mm1FavVu2nRW72R8DjMFXx+On7KOisr9Nj5D+DX7Onjb44XyroGmmLS1fbNq95mO1i9RuwS7f7Kgn1wOa/QT4G/sZ+Cfg8LfUbuEeJvEqAE6hfxgxwv1zDFyE56Mct6EZxXu9hYW2l2cNpZW0NpaQqEiggQIkajoFUcAewqxXw+a8T4zMr04P2dPst36v8ATRH0OCyihhLSl70u7/RBRRXkPxs/ai8D/A+CSHVL7+0td25j0awIefJHBfnEa9OW5x0Br5jD4atiqipUIOUn0R7FWrToxc6jsj1ySRYo2d2CIoLMzHAA7kmvlf46ft7+F/AIudK8GLD4s11QUN0rH7BA3TlxzL9EOP8Aar5A+OH7WPjj43NNZ3d0NG8OseNGsGIjYdvNbrIenX5cjhRXjFfqmU8GwharmLu/5Vt8319F97Pjcbn0pXhhVZd3+iOu+Jfxa8V/F3WzqfinWJ9SlBPkwk7YLcH+GOMfKo4HQZOOSTzXI0UV+mU6UKMFTpxSitktEfIznKpJym7thRRRWpAUV13w0+Eviv4va2NM8LaRNqMoI86cDbBbg/xSSH5VHB68nHAJr76+Bf7BXhb4fG31Xxi0Xi3XV2utu6H7Dbt7If8AW/Vxj/ZFfPZpnmDyqNq0rz/lW/8AwPmepg8ur41+4rR7vb/gnyB8Dv2S/G3xveG8t7f+w/DjHLaxfoQjjPPkpwZT16YXjBYV+hfwT/Zf8EfA63SbSrL+0dd24k1q/Ae4ORyE4xGvsvOOpNetRxrEioihEUbVVRgAdgBTq/HM14jxmaXg3yU/5V+r6/l5H3eCyqhg7StzS7v9OwUUUV8qeyFFFFABRRRQAUUUUARzwR3MMkM0aSxSKUeNwCrKeCCD1BFfkX+1H8I1+C/xi1bRLWNl0i5C3+m7v+feQn5f+AMrp77M96/Xiviv/gpd4Tjn8K+D/Eypia2vJdOkcfxLInmKD9DE2P8AeNfb8I42WGzFUb+7U0fqtU/0+Z89nmHVXCup1jr/AJ/15HwHRRRX7ufnARyNFIsiMUdTuVlOCCOhBr9pfhR4uHj74Z+F/ERYPJqWnQXEu3oJSg8wfg24fhX4tV+qX7C2rvqv7NfhuOQ7msprq23E5JAndh+QcD8K/N+N6Clg6VbrGVvk1/wEfV8PVGq86fdX+5/8E9+ooor8ZPvQooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigD5n/4KFA/8M9vx01a2/k9fmPX6sftwaI2tfs1+KCi7pLNra7UeyzoGP8A3yzV+U9fuHBc1LLZRXST/JH55n8WsWn3S/UKKKK++Pmj9MP+CdjRt8AbgJncNauRJn+95cX9MV9QV8S/8E0PGMcmheMfCjyBZobmPVIYz1ZXURyEfTy4s/7wr7ar+dOIqUqWa11Lq7/ern6nlc1PB02u1vuCiiivnD1QooooAKKKKACiiigCNII45XkWNFkfG9wAC2OmT3xUlFV9R1G00ixnvb66hsrOBDJNcXEgjjjUdWZiQAB6mmk27INEWK5f4hfE7wx8LNEfVvFGsW+lWgB2CVsyTEfwxoPmc+wBr5b+On/BQrStC+0aT8ObdNavh8razdoRaxnv5acNIfc4X/eFfC/jPx14g+ImuTax4k1a61jUZODNcvnaM52qvRF5OFUADsK++yrhHE4y1XGfu4dvtP5dPnr5HzONzylQvCh70vw/4Py+8+mfjr+394h8ZG50nwJHL4Z0Zso2oOQb6dfUEcQj/dy3+0OlfJtxcy3c8k9xK888jF3lkYszseSSTyTTKK/XcDl2Fy6n7PDQUV+L9X1PiMRiq2Klz1ZX/roFFFFekcgUUV9E/Av9iXxn8Whb6nqyt4U8NvtcXV5GftFwh/55RcHB/vNgc5G7pXFi8bh8DT9riZqMfP8ARdfkdFDD1cTPkpRuzwDSNGv/ABBqUGn6ZZXGo39w2yK2tozJJI3oqjJNfZ/wL/4J5Xd/9n1f4l3JsYPvLoNlIDKw7ebKOF/3UyefvKeK+tPhF8BvBvwS0v7L4a0tY7p02T6ncYkurjnPzvgcf7KgL7V6HX5LmvGFbEXpYBckf5vtP07fn5o+1wWRU6Vp4l8z7dP+CZPhbwlovgnRodJ0DS7XSNNh+5bWkQRc9ycdScck5J7mtaiuc8d/EPw58MtCk1jxNq1vpFghwHnb5pGxnaij5nb2UE1+epVK9SyvKT+bbPqG4043eiX3HR1hN460BfF8XhYarbyeIZIHuf7PjbdKkS4y7gfcHzDG7Gc8Zwa+Cvjp/wAFBNd8VC40n4fQyeHNLbKNqkwBvZR/sAZEQPtluhBXpVv/AIJvWNzrPxQ8Z+IbqWS6ni0xYJbiZi7u80yvkseST5J5r6+XDNfDYCpjsY+XlWket3or9Fvtv6HhrN6dbEww9BXu9X0+R+g9FFFfFnvhRRRQAUUUUAFFFFABXy3/AMFF2jX4CWQfG465bhPr5U/9M19SV8Rf8FMPF8aaR4N8LRyAyyzy6nNGDyqqvlxk/UvL/wB8mvpOHKUqua0FHo7/AHK55WazUMFUb7W+8+DKKKK/oo/LAr9OP+Ceylf2e0JBAOq3JGe4wlfmPX6rfsOaK+j/ALNfhhpF2yXj3N0Rjs07hT+Kqp/GvgeNJKOWxXea/Jn0uQJvFt9ov80e9UUUV+Hn6GFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAc98RPCieO/AXiLw7JtA1TT57MM3RWdCqt+BIP4V+Kl3aTWF1NbXEZhnhdo5I26qwOCD9CK/cyvyv8A23/hc/w7+OOo3sELR6V4hB1O3cDC+Yx/fr9Q+W+jrX6bwRjFCtUwkn8SuvVb/h+R8jxDh3KnCuumj+f9fifP9FFFfsJ8Kelfs6fFyT4K/FjR/EZL/wBm7ja6jGgyXtXID8dyuFcDuUFfr9YX1vqtjbXtnPHc2lzGs0M0TbkkRgCrA9wQQRX4b19g/safteQeAIoPA3jW7Mfh9mP9napKSRZEn/VSf9MieQf4SeflOV/OuLMknjYLGYZXnFWa6teXmvxXofU5LmEcPJ0KrtF7Ps/+CfofRUdvcRXcEc8EiTQyKHSSNgyupGQQR1BHepK/Fj78KKKKACiiigAorgvit8cfBvwY0sXfijV47WVxmGxh/eXM/wDuRjnH+0cKO5Ffn/8AHP8Abk8Y/FIXOl6AX8JeHHBQxW0mbudf+mkowVB/upjqQS1fR5XkONzV81OPLD+Z7fLv8vnY8rGZlQwStN3l2W//AAD7A+On7ZPgr4NrcadbTDxL4mQFRptjICkL+k0vIT/dGW9h1r8+PjJ+0V41+OF8W8QakY9MR98GkWmY7WL0O3OWb/aYk8npXmRJYkk5PqaWv2PKuHsHlaUormn/ADP9O35+Z8Jjc0r4zRu0ey/XuFFFFfUHjhRRWv4S8Ha3471yDR/D+l3OralOcJb2ybj9SeiqO7HAHc1EpxhFyk7JFJOTsldmRXovwg+AHjT43al5HhzS2NkjbZ9Uusx2kPTIL45bkfKuW9sV9a/Av/gnnY6WLfV/iVcrqN1gOuhWUhEEZ64llHLn1VcDrywr7L0rSbHQdOt7DTbODT7C3XZDbWsSxxxr6KoAAH0r85zbjGjQvSwC55fzP4V6d/y9T6rBZFUqWnifdXbr/wAA8E+BX7Fngz4Q/Z9S1KNfFPiZMOL28jHkwN/0yiOQMHozZbuMdK+hqKK/JsVjMRjqjq4mblLz/Tt8j7WjQpYeHJSjZBUF7e2+m2k13dzxWtrChklnncIkagZLMx4AHqa8S+OX7YHgj4Kiaw8//hIfEqDA0mwcfu2/6bSciP6ct0+XHNfnt8aP2lfG/wAb7xxrWom00cNmHR7ImO2QZ43DOZGH95s+2OlfR5VwzjMztUkuSn3fX0XX10R5WNzehhLxXvS7L9WfXfx1/wCCgmieGPtOkfD2GPxBqa5jbVpwRZxHpmMcGUg9+F6EFhXwj45+IXiL4la7JrHibV7nWL9+BJcN8sa/3UUYVF/2VAFc/RX7FluS4PKo2oR97rJ6t/Pp6I+ExePr4x/vHp2WwV93f8E4PE3hPRtD8RaXPrNrbeLNUvkKWE7eW8sEaDy9hPDnc8vyjJA5xXwjRHI0UiyIxR1O5WU4II6EGts1y9ZphJYVycb21Xlr9xGCxTwdZVkr2P3Qor80vgd+3p4s+HzW+meLxL4u0FSFM0r/AOnwr6rITiT6PycD5hX3v8L/AIy+EPjFpP2/wvrEN8VUGa0Y7LiD2kjPI64z0PYmvwnM8ixuVO9WN4fzLb/gfM/R8HmOHxitB2l2e/8AwTtqKKK+ePTCiiigAooqK6uYbK3luLiWOCCJS8ksrBVRRySSeAB609wItV1S00TTLvUL+4S0srWJpp55DhY0UZZifQAV+P8A+0N8WZfjT8V9a8SZkFgzi20+KTrHbJkIMdi3Lkdi5r3P9sn9ruL4jLL4K8F3Tnw2j/6fqKEr9vYHiNO/lA85/iIHYfN8jV+1cKZJPAweMxKtOSsl2Xn5v8F8z8/zrMI4iSoUneK3fd/8AKKKK/Qz5cdBBJdTxwxIZJZGCIijJZicAD8a/ar4beEk8B/D7w34dQL/AMSvT4LRivRnRAGb8Wyfxr8y/wBir4XP8SfjnpM80LPpOgkardNj5dyH9yhzxzJtOO4VvSv1Yr8f43xinVpYSL+FXfq9vw/M+54eoOMJ1310Xy3/AK8gooor8xPrwooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigArxP9rf4IH42/Cq4trCIN4i0pjfaaccyMF+eHPbeOPTcEJ6V7ZRXVhcTUwdeGIpO0ou6Ma1KNenKlPZn4XyRtFI0bqUdTtZWGCCOoIor7W/bq/Zgk06+vPiX4WtN1jOfM1qzhXmGQnm5UD+Fv4/Q/N0Jx8U1/R+WZjRzPDRxFF77rs+qf9eZ+VYvCzwdV0p/LzXcKKKK9U4j2X4J/tY+OvgiIrKxu01jw+p50jUSXjQZ58pvvRnk9DtyclTX2R4C/wCChfw48SxpH4gh1DwndnhvPiNzBn0Dxgt+aAV+aVFfM5hw7l+Yyc6kOWT6x0fz6P5o9fC5risKuWMrrs9f+CfsTpn7SHws1aESwfEHw6ikZxc6jFA3/fMhU/pTtQ/aM+FumRGSb4g+G3UDOLfUopj+SMT2r8dKK+b/ANR8Lf8AjSt8j1f9Yq1vgX4n6e+Mv2/vhV4ajlXTLrUPE1yuQE0+0aNN3u8uzj3AP4180fFD/goR488XrNaeGLW28HWD8ebF/pF2R/10YbV/4CgI/vV8s0V7mD4WyzBtS5Od/wB7X8NF+B51fOMXXVublXlp+O/4lrVtXvte1Ge/1O9uNQvp23S3N1K0kkh9WZiSaq0UV9Ykoqy2PFbbd2FFFFUIKI42mdURS7sQqqoyST0AFev/AAR/ZZ8b/HGaO402z/svQN2H1m/UrCRnBEY6yng8LwD1Ir9C/gf+yl4I+CEUV1Z2n9seIgPn1q/QNKD/ANMl6RD/AHecdWNfJ5rxJg8svC/PU/lXT1fT8/I9rBZVXxlpW5Y93+nc+QPgX+wP4n8eG31Xxq8vhTQ2wwtNo+3zr7KRiIe75P8As96++Phv8KfCvwl0RdL8L6PBpkGB5sqjdNOwH3pJD8zH6njtgV1tFfjmZ53jM1l++laPSK2/4PzPu8Hl1DBL92rvu9/+AFFZ+veINM8L6VcaprGoW2l6dbruluruVY40Hux4r4q+Ov8AwUNSMXGkfDK33vyjeIL6LAHPWGFhz/vSD/gPeufL8qxeaT5MNC66vovV/pubYrG0MHHmqy+XVn1f8UvjN4R+Dejf2h4p1aKy3gmC0X57i4I7Rxjk9ueAM8kV8BfHX9uzxb8SftGl+FvN8I+HnypaF/8ATZ1/25B9wH+6n0LEV86eJPE+reMNZudW1zUbnVdSuG3S3V3IXdvQZPQDoAOAOBWbX6/lPCuEwFqtf95U89l6L9X+B8Ljc5r4m8Kfux/F+r/yBmLsWYksTkk9SaKKK+3Pngooq3Fo2oT6VPqcdjcyabBIsMt4sTGKN2yVVnxgE4OATSbS3Gk3sVKKKKoQVc0XXNR8N6nBqOk39zpmoQNuiurSVopEPqGUgiqdFS0pKz2Gm07o+rPhn/wUO8c+FY47XxTY2vi+0U/69j9muwP99QUbA9Uz719KeD/2/PhT4lRF1G9v/DNweCmo2jOufZ4t4x7nFfl/RXyWM4VyzFtyUOR/3dPw1X4Ht0M5xdBW5uZeev47n7GWH7Rfwu1GPfF8QvDaLj/l41OGE/k7A0zUv2jvhbpURkm+IPh11AyRbajFOfyjLGvx2orw/wDUbC3/AI0rfI9H/WKtb4F+J+lnj3/gob8OPDcMieHodQ8WXmDsMMJtbfP+08gDD8ENfGfxr/ap8dfHAvaapeJpmg7tyaPp2UhOOhkJJaQ9D8xxnkAV4/RX0uX8O5flslOlDmkustX8ui+SPJxWaYrFLlnKy7LT/ghRRRX0x5AUKpdgqglicADqTRX2f+wt+y++uX9p8SPFFoV021k36NZzJj7RKCCLg/7Cn7vqwz0UZ8vMswo5Zh5Yis9tl3fRL+vM7MJhZ4uqqVP/AIZdz6O/ZA+BzfBX4WQpqEXl+I9ZK3uohlw0J2/u4D/uAnP+0z17nRRX84YvE1MZXniKrvKTu/68tj9Wo0Y0KcaUNkFFFFchsFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAEdxbxXcEkE8aTQyKUeORQyupGCCD1BHavz7/ao/YguvDEl34s+HlpLeaMxaW80SIbpbMckvEOrx/7PLL2yPu/oRRXs5XmuJymt7Wg9Huns/wCujODGYKljYclRej6o/C4gqSCMH0NLX6j/AB4/Yp8H/F+S51bS9vhXxPKxke9tYt0Fy3JPmxAgZJPLrhu53V8HfFf9l74h/B+WZ9X0SS80tDxq2mAz2xHqSBlP+Bha/bcr4iwOZpRjLln/ACvf5dH8tfI/PsXleIwjbavHuv17HlNFFFfUHjhRRRQAUUUUAFFdr8PPgp43+Klwsfhjw3falEW2m7Eey3Q8Z3SthB1zjOfavrr4Tf8ABOG3g+z3/wAQ9bNw4IZtI0klU+jznk+4VR7Ma8PH51gctT9vUXN2Wr+7p87Ho4bL8Tin+7jp3eiPjj4efDDxR8VdcTSfC+jz6rdnlzGAscI/vSOcKg9yeegya+9PgX+wF4c8Etb6t45lh8U6yu11sFU/YYG9CDzN/wACAX/ZPWvprwj4M0PwFokGj+HtKtdI02EfLb2sYUE92Y9WY92OSe5rar8nzXizFY69PDfu4f8Akz9X09F97PtMFktHD2nV96X4L5f5kdvbxWkEcEEaQwxqESONQqooGAAB0AHapKKK+FPoxCQASTgD1r5s+Of7cng74XfadL0Ap4t8RxkoYraTFrbt/wBNJRkMR/dTPQglTW/+27fXOn/s0+LJbW4ltpGNrGXhcoxVrmJWXI7EEgjuCa/KSv0Thjh/D5nTeLxLbinbl2vZJ6v57K3qfL5vmdXCSVGkrNq9/wDI7r4rfG/xj8Z9V+2eJ9Xluo1OYbCLMdrB/uRg4B/2jlj3JrhaKK/ZKVGnQgqdKKjFdFoj4Oc5VJOc3dsKKKK2MworofAnw88R/E3XE0jwxpFzrF+w3GOBfljXP3nY4VF92IFfd3wL/wCCfWh+F/s2rfEKaPxDqikOulQEiyiPo5wDKQe3C9iGFeFmedYPKo3ry97pFat/5erPSwmAr41/u1p3ex8vfs7/ALKXif4738V4Uk0Xwmj4n1eZP9Zg8pCp++3Xn7owcnPB/Tnwb8MPDPgPwTF4T0jSbePQljaOS2lQSC43DDtLu++W7569OgAro7Oyt9OtYbW0gitbaFQkcMKBERRwAoHAA9BU1fiecZ9ic3mub3YLaK/N93/SP0DAZbSwMdNZPd/10Pjv45/8E+NF8Si41b4eTx+H9SPzHSLlibOU99jctET6cr0ACjmvhTx18O/Enwz1t9J8TaPdaPerkqs6YWQf3kYfK6+6kiv2vrA8beAfD3xH0OTSPEukWusae5z5VymSp/vIwwyN/tKQfevYyri3FYK1LFfvIf8Aky+fX5/ecONySjXvOj7svw/4Hy+4/E6ivun4r/8ABN9XM198PNc2ZO4aTrB4HskyjP0DKfdq+SPiD8G/GvwsuWh8UeHL3SlBwLlo99u57bZVyh+gNfquAzrA5il7Cor9no/uf6XPi8TgMRhX+8jp33X3nG0UUV7h54UUUUAFFFFABRXqnws/Zh+InxeeGXRdBlttMkIzqmo5t7YD1DEZcc/wBjX3h8Bv2JvCHwje21bV9vinxPHh1ubmPFvbuOQYojnkH+NsnjI218xmfEOByxNSlzT/AJVq/n2+evkevhMrxGLd0rR7v9O58/fsr/sRXviqey8WfEG0ksdCUiW10WZSs153DSjqkft95vYYLfoTb28VpBHBBGkMMahEjjUKqKBgAAdAB2qSivxHNM1xGbVva13otktl/XVn6Fg8FSwUOSmter6sKKKK8Y7wooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooA8r8dfsu/C/4iNLLqvhGxjvJOWvNPU2sxb+8TGV3H/ezXifiL/gmt4MvXZtF8Uazpef4LpIrpR9MBD+ZNfYFFe1hs5zHCLlo15Jdr3X3O6OCrgMLWd501f7vyPgq6/4JkX6sfs3xBtpVxwZdKZP5TNT7P/gmPeMw+1fEKCIcZ8nSWf8AnMK+8qK9P/WvN7W9t/5LH/I4/wCxcD/J+L/zPkDw/wD8E1vBdmytrPijWtTK9VtVitlb65Vz+Rr2LwX+yb8KfArxy2Hg+yu7lDkXGp7rts+oEhKg/QCvXaK8zEZ1mOKVqteVvJ2X3Kx2UsvwtHWFNfn+YyKKO3iSOJFjjQYVEGAo9AKfRRXineFFFFABRRRQB4H+3R/ybJ4q/wCutl/6VxV+Vdfqp+3R/wAmyeKv+utl/wClcVflXX7dwT/yLp/43/6TE/PeIP8Ae4/4V+bCiivc/gZ+x/43+NJgvzB/wjvhp+f7Wv4z+9X/AKYx8GT68LwfmyMV9risXQwVN1cRNRiu/wDWvojwKNCpiJ8lKN2eI2Vlc6leQ2lpBLdXUziOKCFC7yMTgKqjkk+gr68+BX/BPvW/E32bV/iFNJ4f0xsSLpMBBvJR6SHpECO3LdQQpr67+DH7Nfgj4HWitomnC51dlxLrF8BJcvxghTjEan+6oHvnrXqlfk+a8Y1a16WXrlX8z3+S6fn6H2mCyGELTxLu+3T59znfAvw98OfDTQo9H8MaRbaPp6HJjgX5pG/vOxyzt/tMSa6Kiivzec5VJOc3dvdvc+rjFQSjFWSCiiioKCiiigAqO4giuoXhmjSaJxtZJFDKw9CD1qSigDyDxn+yX8KPHLyS3vg+zsrl+ftGl7rNs+uIyFJ+oNePeIP+Ca3gu8kL6P4o1rTAf4LlYrlR9MKhx9Sa+wKK9rD51mWFVqVeVvN3X3O559XL8LW1nTX5fkfB13/wTHulk/0b4hwyJ/020gqR+UxzRa/8Ex7tpMXHxDgjT1i0guf1mFfeNFen/rVnFre2/wDJY/5HJ/YuB/k/F/5nx/4d/wCCa3gyydH1rxRrOq7cEpapFao31yHOPoR9a9r8CfsufC/4dPHNpPhKykvIyGF5qAN1KGH8QMhbaeP4QK9VorzMTnOY4tWrV5Ndr2X3KyOylgMLRd4U1f7/AMxAAAABgCloorxTvCiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKACiiigAooooAKKKKAPA/26P+TZPFX/XWy/8ASuKvzh+FnwW8X/GXVxY+F9IlvFVgs964KW1vnvJIeBxzjlj2Br9dviF8PtG+KPhW48O+IIJLnSbmSKSaCOQxmTy5FkClhyASozgg47itLw94b0rwlpFvpWi6fbaXp1uu2K2tYwiKPoO/v1NfbZVxH/ZGAlh6UL1HJu72Ssl6t6eR8/jcq+vYlVZytFJLzerPnX4F/sK+Efhp9m1TxMY/F3iFAGxPH/oVu/X5Iz98j+8/pkKtfTYAAAAwBS0V8vjMdicfU9riZuT/AC9Fsj2KGHpYaHJSjZBRRRXCdAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFABRRRQAUUUUAFFFFAH//Z" alt="Sinch Logo">
+      </div>
+      <div class="bank-name">Sinch <span>Bank</span></div>
+      <div class="uli-badge">⚡ ULI Powered</div>
+    </div>
+    <div class="progress-wrap">
+      <div class="step-dot" id="dot-1"></div>
+      <div class="step-dot" id="dot-2"></div>
+      <div class="step-dot" id="dot-3"></div>
+      <div class="step-dot" id="dot-4"></div>
+      <div class="step-dot" id="dot-5"></div>
+      <div class="step-dot" id="dot-6"></div>
+      <div class="step-dot" id="dot-7"></div>
+      <div class="step-dot" id="dot-8"></div>
+      <div class="step-dot" id="dot-9"></div>
+      <div id="step-label" class="step-label">Step 1/9</div>
+    </div>
+  </header>
+
+  <!-- SCREEN 1: OTP AUTH -->
+  <div class="screen active" id="screen-1">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 1 OF 9</p>
+      <h1 class="screen-title">Verify Your<br>Mobile Number</h1>
+      <p class="screen-sub">We've sent a 6-digit OTP to your WhatsApp-linked number</p>
+
+      <div class="phone-display">
+        <i class="fa-solid fa-mobile-screen-button phone-icon"></i>
+        <div>
+          <div class="phone-num">+91 98765 43210</div>
+          <div class="phone-label">Linked with WhatsApp</div>
+        </div>
+        <i class="fa-solid fa-circle-check" style="color:var(--success);margin-left:auto;font-size:18px;"></i>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Enter 6-Digit OTP</label>
+        <div class="otp-grid" id="otp-grid">
+          <input class="otp-box" maxlength="1" type="tel" data-idx="0">
+          <input class="otp-box" maxlength="1" type="tel" data-idx="1">
+          <input class="otp-box" maxlength="1" type="tel" data-idx="2">
+          <input class="otp-box" maxlength="1" type="tel" data-idx="3">
+          <input class="otp-box" maxlength="1" type="tel" data-idx="4">
+          <input class="otp-box" maxlength="1" type="tel" data-idx="5">
+        </div>
+        <div class="resend-row">
+          <span style="font-size:12px;color:var(--gray);">Didn't receive OTP? </span>
+          <button class="resend-btn" onclick="showToast('OTP resent to +91 98765 43210')">Resend OTP</button>
+        </div>
+      </div>
+
+      <div class="uli-strip">
+        <i class="fa-solid fa-shield-halved uli-strip-icon"></i>
+        <div class="uli-strip-text">Your session is secured by <span>Sinch Bank</span> & <span>ULI</span> encryption</div>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="verifyOTP()">
+        <i class="fa-solid fa-lock-open"></i> Verify & Continue
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 2: LOAN INTRO -->
+  <div class="screen" id="screen-2">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 2 OF 9</p>
+      <h1 class="screen-title">Your Pre-Approved<br>Loan Offer 🎉</h1>
+      <p class="screen-sub">Piyush Traders is eligible for an MSME Business Loan</p>
+
+      <div class="card card-green" style="margin-bottom:16px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Eligible Loan Amount</div>
+        <div style="font-size:38px;font-weight:800;color:white;letter-spacing:-1px;">₹5L – ₹15L</div>
+        <div style="font-size:12px;color:rgba(255,255,255,0.6);margin-top:4px;">Based on your business profile</div>
+        <div style="height:1px;background:rgba(255,255,255,0.15);margin:16px 0;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;">
+          <div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:2px;">Interest</div>
+            <div style="font-size:15px;font-weight:800;color:var(--yellow);">13.5%</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);">p.a.</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:2px;">Tenure</div>
+            <div style="font-size:15px;font-weight:800;color:var(--yellow);">12–36</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);">months</div>
+          </div>
+          <div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.6);margin-bottom:2px;">Processing</div>
+            <div style="font-size:15px;font-weight:800;color:var(--yellow);">1%</div>
+            <div style="font-size:10px;color:rgba(255,255,255,0.5);">fee</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="uli-strip">
+        <i class="fa-solid fa-bolt uli-strip-icon"></i>
+        <div class="uli-strip-text"><span>ULI-powered</span> data fetch — Documents secured. Minimal manual upload required.</div>
+      </div>
+
+      <div class="section-divider">Why choose us</div>
+
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-bolt"></i></div>
+        <div class="feature-text">
+          <div class="feature-title">Instant Eligibility</div>
+          <div class="feature-desc">Real-time credit decisions powered by ULI data</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-file-circle-check"></i></div>
+        <div class="feature-text">
+          <div class="feature-title">Minimal Paperwork</div>
+          <div class="feature-desc">GST, ITR & bank data auto-fetched via ULI</div>
+        </div>
+      </div>
+      <div class="feature-item">
+        <div class="feature-icon"><i class="fa-solid fa-rocket"></i></div>
+        <div class="feature-text">
+          <div class="feature-title">Disbursal in Minutes</div>
+          <div class="feature-desc">Money in your account within minutes of approval</div>
+        </div>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="goTo(3)">
+        <i class="fa-solid fa-arrow-right"></i> Continue to Apply
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 3: ULI CONSENT -->
+  <div class="screen" id="screen-3">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 3 OF 9</p>
+      <h1 class="screen-title">ULI Consent</h1>
+      <p class="screen-sub">Select the data sources you authorise Sinch Bank to access securely via ULI</p>
+
+      <div class="card" style="padding:16px 20px;margin-bottom:16px;">
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">🧾</span>
+          <div class="flex-1">
+            <div class="consent-label">GST Returns</div>
+            <div class="consent-sub">Last 12 months filing data</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">🏭</span>
+          <div class="flex-1">
+            <div class="consent-label">Udyam Registration</div>
+            <div class="consent-sub">MSME classification & details</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">🆔</span>
+          <div class="flex-1">
+            <div class="consent-label">PAN Details</div>
+            <div class="consent-sub">Identity & tax registration</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">📊</span>
+          <div class="flex-1">
+            <div class="consent-label">Income Tax Filings</div>
+            <div class="consent-sub">Last 2 years ITR data</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">🏦</span>
+          <div class="flex-1">
+            <div class="consent-label">Banking Data (AA)</div>
+            <div class="consent-sub">Account Aggregator framework</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">📈</span>
+          <div class="flex-1">
+            <div class="consent-label">Bureau Score</div>
+            <div class="consent-sub">CIBIL / Experian credit data</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+        <div onclick="toggleConsent(this)" class="consent-item">
+          <span class="data-icon">💳</span>
+          <div class="flex-1">
+            <div class="consent-label">Existing Loan Obligations</div>
+            <div class="consent-sub">Active loans & repayment history</div>
+          </div>
+          <div class="consent-check checked"></div>
+        </div>
+      </div>
+
+      <div style="background:#FFF8E7;border:1.5px solid rgba(254,189,61,0.4);border-radius:var(--radius-sm);padding:14px;font-size:12px;color:#92400e;line-height:1.6;margin-bottom:16px;">
+        <i class="fa-solid fa-circle-info" style="margin-right:6px;"></i>
+        By proceeding, you give explicit consent to Sinch Bank to fetch the above data via the <strong>Unified Lending Interface (ULI)</strong>, as per RBI guidelines. Your data is encrypted and used solely for loan assessment.
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="confirmConsent()">
+        <i class="fa-solid fa-shield-halved"></i> Confirm Consent via OTP
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4: KYC -->
+  <div class="screen" id="screen-4">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 4 OF 9</p>
+      <h1 class="screen-title">KYC & Identity<br>Verification</h1>
+      <p class="screen-sub">Enter your PAN and Aadhaar for instant verification</p>
+
+      <div class="form-group">
+        <label class="form-label">PAN Number</label>
+        <div class="input-row">
+          <input class="form-input" id="pan-input" type="text" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase;letter-spacing:2px;font-family:var(--mono);" oninput="this.value=this.value.toUpperCase();checkPAN()">
+        </div>
+        <div id="pan-status" style="margin-top:8px;display:none;">
+          <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> PAN Verified – Piyush Kumar Jain</span>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Aadhaar Number</label>
+        <input class="form-input" id="aadhaar-input" type="tel" maxlength="14" placeholder="XXXX XXXX XXXX" oninput="formatAadhaar(this);checkAadhaar()">
+        <div id="aadhaar-status" style="margin-top:8px;display:none;">
+          <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Aadhaar Verified</span>
+        </div>
+      </div>
+
+      <div class="card card-dark" style="margin-top:8px;">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;">
+          <i class="fa-solid fa-shield-halved" style="color:var(--yellow);font-size:20px;"></i>
+          <div style="font-size:13px;font-weight:700;color:white;">100% Secure Verification</div>
+        </div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);line-height:1.7;">
+          Your Aadhaar data is fetched via UIDAI's certified API. PAN is verified via Income Tax e-filing portal. No data is stored without consent.
+        </div>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="verifyKYC()">
+        <i class="fa-solid fa-fingerprint"></i> Verify Identity
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 5: ULI DATA FETCH -->
+  <div class="screen" id="screen-5">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 5 OF 9</p>
+      <h1 class="screen-title">Fetching Your<br>Business Data</h1>
+      <p class="screen-sub">Securely retrieving your financial data via ULI — this takes a few seconds</p>
+
+      <div id="fetch-list">
+        <div class="fetch-item" data-delay="500" id="fetch-0">
+          <div class="fetch-icon-wrap">🧾</div>
+          <div><div class="fetch-name">GST Returns</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+        <div class="fetch-item" data-delay="1400" id="fetch-1">
+          <div class="fetch-icon-wrap">🏭</div>
+          <div><div class="fetch-name">Udyam Registration</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+        <div class="fetch-item" data-delay="2100" id="fetch-2">
+          <div class="fetch-icon-wrap">🆔</div>
+          <div><div class="fetch-name">PAN & ITR Data</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+        <div class="fetch-item" data-delay="2900" id="fetch-3">
+          <div class="fetch-icon-wrap">🏦</div>
+          <div><div class="fetch-name">Banking Data (AA)</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+        <div class="fetch-item" data-delay="3600" id="fetch-4">
+          <div class="fetch-icon-wrap">📈</div>
+          <div><div class="fetch-name">Bureau Score</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+        <div class="fetch-item" data-delay="4200" id="fetch-5">
+          <div class="fetch-icon-wrap">💳</div>
+          <div><div class="fetch-name">Loan Obligations</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+        <div class="fetch-item" data-delay="4900" id="fetch-6">
+          <div class="fetch-icon-wrap">🕐</div>
+          <div><div class="fetch-name">Business Vintage</div><div class="fetch-status">Waiting...</div></div>
+          <div class="fetch-indicator"><div style="width:20px;height:20px;border:2px solid #E5E7EB;border-radius:50%;"></div></div>
+        </div>
+      </div>
+
+      <div id="fetch-complete" style="display:none;margin-top:20px;">
+        <div style="text-align:center;padding:20px;background:var(--green-light);border-radius:var(--radius);border:1.5px solid rgba(1,120,116,0.2);">
+          <i class="fa-solid fa-circle-check" style="color:var(--green);font-size:36px;margin-bottom:12px;display:block;"></i>
+          <div style="font-size:16px;font-weight:800;color:var(--dark);">All Data Fetched!</div>
+          <div style="font-size:12px;color:var(--gray);margin-top:4px;">Generating your personalised loan offer...</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 6: LOAN OFFER -->
+  <div class="screen" id="screen-6">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 6 OF 9</p>
+      <h1 class="screen-title">Your Personalised<br>Loan Offer</h1>
+      <p class="screen-sub">Tailored for Piyush Traders based on your business data</p>
+
+      <div class="card card-green" style="margin-bottom:16px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.6);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:4px;">Sanctioned Amount</div>
+        <div class="amount-display">₹12,00,000</div>
+        <div class="amount-sub">Twelve Lakh Rupees</div>
+      </div>
+
+      <div class="section-divider">Select Tenure</div>
+      <div class="tenure-tabs" id="tenure-tabs">
+        <div class="tenure-tab" onclick="setTenure(12,this)">12 Months</div>
+        <div class="tenure-tab active" onclick="setTenure(24,this)">24 Months</div>
+        <div class="tenure-tab" onclick="setTenure(36,this)">36 Months</div>
+      </div>
+
+      <div class="emi-highlight">
+        <div class="emi-label">Monthly EMI</div>
+        <div class="emi-amount" id="emi-display">₹57,451</div>
+        <div class="emi-per">for 24 months @ 13.5% p.a.</div>
+      </div>
+
+      <div class="stat-grid">
+        <div class="stat-box stat-box-green">
+          <div class="stat-label">Interest Rate</div>
+          <div class="stat-val stat-val-green">13.5%</div>
+          <div style="font-size:11px;color:var(--gray);">p.a. reducing</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Processing Fee</div>
+          <div class="stat-val">₹12,000</div>
+          <div style="font-size:11px;color:var(--gray);">1% of loan amount</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-label">Total Payable</div>
+          <div class="stat-val" id="total-display">₹13,78,824</div>
+          <div style="font-size:11px;color:var(--gray);">incl. interest</div>
+        </div>
+        <div class="stat-box stat-box-green">
+          <div class="stat-label">Bureau Score</div>
+          <div class="stat-val stat-val-green">762</div>
+          <div style="font-size:11px;color:var(--gray);">Excellent</div>
+        </div>
+      </div>
+
+      <div class="section-divider">Repayment Schedule (Preview)</div>
+      <div style="border-radius:var(--radius-sm);overflow:hidden;border:1.5px solid #E5E7EB;margin-bottom:16px;">
+        <table class="repay-table">
+          <thead>
+            <tr><th>Month</th><th>EMI</th><th>Principal</th><th>Interest</th><th>Balance</th></tr>
+          </thead>
+          <tbody id="repay-tbody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="goTo(7)">
+        <i class="fa-solid fa-check-circle"></i> Accept This Offer
+      </button>
+      <div style="display:flex;gap:10px;">
+        <button class="btn btn-outline btn-sm" style="flex:1;" onclick="showToast('A callback has been scheduled!')"><i class="fa-solid fa-phone"></i> Request Callback</button>
+        <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="showToast('Progress saved!')"><i class="fa-solid fa-bookmark"></i> Save for Later</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- SCREEN 7: DIGITAL AGREEMENT -->
+  <div class="screen" id="screen-7">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 7 OF 9</p>
+      <h1 class="screen-title">Loan Agreement<br>& eSign</h1>
+      <p class="screen-sub">Please review the loan agreement and sign digitally using Aadhaar OTP</p>
+
+      <div class="agreement-scroll" id="agreement-scroll" onscroll="checkScroll(this)">
+        <strong>LOAN AGREEMENT</strong><br>
+        Lender: Sinch Bank, a scheduled commercial bank regulated by RBI<br>
+        Borrower: Piyush Kumar Jain (Piyush Traders)<br>
+        Date: 29 April 2026<br><br>
+        <strong>1. Loan Details</strong><br>
+        Sanctioned Amount: ₹12,00,000 | Rate: 13.5% p.a. reducing balance | Tenure: 24 months | EMI: ₹57,451<br><br>
+        <strong>2. Disbursement</strong><br>
+        The loan shall be disbursed to the borrower's registered bank account within minutes of agreement execution and mandate setup, subject to completion of all KYC and verification requirements.<br><br>
+        <strong>3. Repayment</strong><br>
+        The borrower agrees to repay the loan in 24 equal monthly instalments (EMIs) of ₹57,451 each, starting from the date of first disbursement. EMIs will be collected via the selected eMandate method.<br><br>
+        <strong>4. Interest & Charges</strong><br>
+        Interest @ 13.5% p.a. on reducing balance. Processing fee: 1% (₹12,000) deducted at disbursement. Late payment penalty: 2% per month on overdue amount. Foreclosure charges: 2% of outstanding principal after 6 months.<br><br>
+        <strong>5. Security & Collateral</strong><br>
+        This is an unsecured MSME business loan. No collateral is required. The borrower's personal guarantee is implicit.<br><br>
+        <strong>6. ULI Data Usage</strong><br>
+        The borrower consents to Sinch Bank accessing financial data via the Unified Lending Interface (ULI) for the purpose of loan assessment, monitoring, and collections. Data will be used as per RBI guidelines and the borrower's prior consent.<br><br>
+        <strong>7. Governing Law</strong><br>
+        This agreement is governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts in Mumbai, Maharashtra.
+      </div>
+
+      <div style="margin-bottom:16px;">
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="checklist-box checked">✓</div>
+          <div class="checklist-label">I have read and accept the Terms & Conditions</div>
+        </div>
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="checklist-box checked">✓</div>
+          <div class="checklist-label">I understand the interest calculation method</div>
+        </div>
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="checklist-box">✓</div>
+          <div class="checklist-label">I acknowledge the penal charges & foreclosure rules</div>
+        </div>
+        <div class="checklist-item" onclick="toggleCheck(this)">
+          <div class="checklist-box">✓</div>
+          <div class="checklist-label">I consent to Aadhaar-based digital signing</div>
+        </div>
+      </div>
+
+      <div class="card card-yellow">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px;">
+          <i class="fa-solid fa-pen-to-square" style="font-size:18px;"></i>
+          <div style="font-size:14px;font-weight:800;">Aadhaar eSign</div>
+        </div>
+        <div style="font-size:12px;color:var(--dark);opacity:0.8;margin-bottom:12px;">An OTP will be sent to your Aadhaar-linked mobile for legally valid digital signing via UIDAI.</div>
+        <div style="font-family:var(--mono);font-size:13px;font-weight:600;color:var(--dark);opacity:0.6;">Aadhaar: XXXX XXXX 7891</div>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="eSign()">
+        <i class="fa-solid fa-signature"></i> Proceed to eSign via Aadhaar OTP
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 8: EMANDATE -->
+  <div class="screen" id="screen-8">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 8 OF 9</p>
+      <h1 class="screen-title">Auto-Repayment<br>Setup</h1>
+      <p class="screen-sub">Set up your EMI collection method for seamless repayment</p>
+
+      <div class="card card-dark" style="margin-bottom:20px;">
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:0.8px;">Monthly EMI</div>
+        <div style="font-size:28px;font-weight:800;color:var(--yellow);margin:4px 0;">₹57,451</div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);">Starting 29 May 2026 • 24 instalments</div>
+      </div>
+
+      <div class="section-divider">Select Repayment Mode</div>
+
+      <div class="mandate-option selected" id="mandate-upi" onclick="selectMandate('upi')">
+        <div class="mandate-radio"></div>
+        <span class="mandate-icon">⚡</span>
+        <div class="mandate-info">
+          <div class="mandate-name">UPI Autopay</div>
+          <div class="mandate-desc">Via UPI ID – instant setup, no bank visit needed</div>
+        </div>
+      </div>
+      <div class="mandate-option" id="mandate-nach" onclick="selectMandate('nach')">
+        <div class="mandate-radio"></div>
+        <span class="mandate-icon">🏛️</span>
+        <div class="mandate-info">
+          <div class="mandate-name">NACH Mandate</div>
+          <div class="mandate-desc">National Automated Clearing House – bank direct debit</div>
+        </div>
+      </div>
+      <div class="mandate-option" id="mandate-debit" onclick="selectMandate('debit')">
+        <div class="mandate-radio"></div>
+        <span class="mandate-icon">💳</span>
+        <div class="mandate-info">
+          <div class="mandate-name">Bank Auto-Debit</div>
+          <div class="mandate-desc">Standing instruction on your savings account</div>
+        </div>
+      </div>
+
+      <div class="section-divider" style="margin-top:20px;">Bank Account Details</div>
+      <div class="form-group">
+        <label class="form-label">Account Number</label>
+        <input class="form-input verified" type="text" value="•••• •••• 4821" readonly>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Bank & IFSC</label>
+        <input class="form-input verified" type="text" value="HDFC Bank — HDFC0001234" readonly>
+      </div>
+      <div id="upi-field">
+        <div class="form-group">
+          <label class="form-label">UPI ID</label>
+          <input class="form-input" type="text" value="piyush.traders@okhdfc" id="upi-id-input">
+        </div>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="setupMandate()">
+        <i class="fa-solid fa-link"></i> Authorise Repayment Mandate
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 9: SUCCESS -->
+  <div class="screen" id="screen-9">
+    <div class="success-screen" id="success-content">
+      <div id="confetti-container" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10;overflow:hidden;"></div>
+
+      <div class="success-icon">
+        <i class="fa-solid fa-check" style="color:white;font-size:44px;"></i>
+      </div>
+
+      <div style="font-size:13px;color:var(--green);font-weight:700;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">Congratulations! 🎉</div>
+      <div class="success-amount">₹12,00,000</div>
+      <div class="success-tagline">Successfully Disbursed to Your Account</div>
+
+      <div class="account-card" style="width:100%;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:16px;">
+          <div>
+            <div class="account-label">Loan Account Number</div>
+            <div class="account-number">SB-2026-0429-8821</div>
+          </div>
+          <div style="text-align:right;">
+            <div class="account-label">Status</div>
+            <div style="color:var(--success);font-weight:800;font-size:13px;">● ACTIVE</div>
+          </div>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin-bottom:14px;"></div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+          <div>
+            <div class="account-label">Monthly EMI</div>
+            <div style="color:var(--yellow);font-size:16px;font-weight:800;">₹57,451</div>
+          </div>
+          <div>
+            <div class="account-label">First Due Date</div>
+            <div style="color:white;font-size:14px;font-weight:700;">29 May 2026</div>
+          </div>
+          <div>
+            <div class="account-label">Tenure</div>
+            <div style="color:white;font-size:14px;font-weight:700;">24 months</div>
+          </div>
+          <div>
+            <div class="account-label">eMandate</div>
+            <div style="color:var(--success);font-size:13px;font-weight:700;">✓ UPI Autopay</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="whatsapp-notif">
+        <span class="wa-icon">💬</span>
+        <div class="wa-text"><strong>Sinch Bank:</strong> ₹12,00,000 disbursed to your account ending 4821. Loan A/c: SB-2026-0429-8821. EMI of ₹57,451 via UPI Autopay from 29 May 2026.</div>
+      </div>
+
+      <div style="background:var(--green-light);border-radius:var(--radius-sm);padding:14px;width:100%;text-align:center;margin-bottom:16px;">
+        <div style="font-size:12px;color:var(--green);font-weight:600;margin-bottom:4px;">Mandate Reference</div>
+        <div style="font-size:14px;font-weight:800;color:var(--dark);font-family:var(--mono);">UPI-NACH-2026-BB29-4821</div>
+      </div>
+
+      <button class="btn btn-primary" style="width:100%;" onclick="showToast('Opening Sinch Bank app...')">
+        <i class="fa-solid fa-home"></i> Go to Sinch Bank Dashboard
+      </button>
+    </div>
+  </div>
+
+  <!-- LOADING OVERLAY -->
+  <div id="loading-overlay">
+    <div class="loading-spinner"></div>
+    <div class="loading-text" id="loading-text">Processing...</div>
+  </div>
+  <!-- TOAST -->
+  <div id="toast"></div>
+</div>
+
+<script>
+let currentScreen = 1;
+const TOTAL = 9;
+
+const emiData = {
+  12: { emi: 107337, total: 1288044, label: '12 months @ 13.5% p.a.' },
+  24: { emi: 57451,  total: 1378824, label: '24 months @ 13.5% p.a.' },
+  36: { emi: 40614,  total: 1462104, label: '36 months @ 13.5% p.a.' }
+};
+let currentTenure = 24;
+
+function updateProgress(n) {
+  for (let i = 1; i <= TOTAL; i++) {
+    const d = document.getElementById('dot-' + i);
+    if (i < n) d.className = 'step-dot done';
+    else if (i === n) d.className = 'step-dot active';
+    else d.className = 'step-dot';
+  }
+  document.getElementById('step-label').textContent = 'Step ' + n + '/' + TOTAL;
+}
+
+function goTo(n) {
+  document.getElementById('screen-' + currentScreen).classList.remove('active');
+  currentScreen = n;
+  document.getElementById('screen-' + n).classList.add('active');
+  updateProgress(n);
+  window.scrollTo(0,0);
+  if (n === 5) startDataFetch();
+  if (n === 6) buildRepayTable(24);
+  if (n === 9) fireConfetti();
+}
+
+function showLoading(msg, cb, delay) {
+  const ol = document.getElementById('loading-overlay');
+  document.getElementById('loading-text').textContent = msg;
+  ol.classList.add('show');
+  setTimeout(() => { ol.classList.remove('show'); cb(); }, delay || 1800);
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+// OTP SCREEN
+document.querySelectorAll('.otp-box').forEach((box, i, all) => {
+  box.addEventListener('input', e => {
+    if (e.target.value) {
+      box.classList.add('filled');
+      if (i < all.length - 1) all[i+1].focus();
+    } else box.classList.remove('filled');
+  });
+  box.addEventListener('keydown', e => {
+    if (e.key === 'Backspace' && !box.value && i > 0) all[i-1].focus();
+  });
+});
+
+function verifyOTP() {
+  const boxes = document.querySelectorAll('.otp-box');
+  const otp = [...boxes].map(b => b.value).join('');
+  if (otp.length < 6) { showToast('Please enter all 6 digits'); return; }
+  showLoading('Verifying OTP...', () => goTo(2), 1500);
+}
+
+// CONSENT
+function toggleConsent(el) {
+  const chk = el.querySelector('.consent-check');
+  chk.classList.toggle('checked');
+}
+
+function confirmConsent() {
+  showLoading('Sending consent OTP...', () => {
+    setTimeout(() => {
+      showLoading('Confirming consent...', () => goTo(4), 1000);
+    }, 200);
+  }, 1200);
+}
+
+// KYC
+function formatAadhaar(inp) {
+  let v = inp.value.replace(/\D/g,'');
+  if (v.length > 4) v = v.slice(0,4)+' '+v.slice(4);
+  if (v.length > 9) v = v.slice(0,9)+' '+v.slice(9);
+  inp.value = v;
+}
+function checkPAN() {
+  const v = document.getElementById('pan-input').value;
+  const s = document.getElementById('pan-status');
+  if (/^[A-Z]{5}[0-9]{4}[A-Z]$/.test(v)) {
+    document.getElementById('pan-input').classList.add('verified');
+    s.style.display = 'block';
+  } else {
+    document.getElementById('pan-input').classList.remove('verified');
+    s.style.display = 'none';
+  }
+}
+function checkAadhaar() {
+  const v = document.getElementById('aadhaar-input').value.replace(/\s/g,'');
+  const s = document.getElementById('aadhaar-status');
+  if (v.length === 12) {
+    document.getElementById('aadhaar-input').classList.add('verified');
+    s.style.display = 'block';
+  } else {
+    document.getElementById('aadhaar-input').classList.remove('verified');
+    s.style.display = 'none';
+  }
+}
+function verifyKYC() {
+  showLoading('Verifying PAN...', () => {
+    showLoading('Verifying Aadhaar via UIDAI...', () => goTo(5), 1600);
+  }, 1400);
+}
+
+// DATA FETCH ANIMATION
+function startDataFetch() {
+  const items = document.querySelectorAll('.fetch-item');
+  items.forEach((item, i) => {
+    const delay = parseInt(item.getAttribute('data-delay')) || (i * 700);
+    setTimeout(() => {
+      item.classList.add('fetching');
+      item.querySelector('.fetch-status').textContent = 'Fetching...';
+      item.querySelector('.fetch-indicator').innerHTML = '<div class="spinner"></div>';
+      setTimeout(() => {
+        item.classList.remove('fetching');
+        item.classList.add('done');
+        item.querySelector('.fetch-status').textContent = 'Fetched ✓';
+        item.querySelector('.fetch-indicator').innerHTML = '<div class="check-circle">✓</div>';
+        if (i === items.length - 1) {
+          document.getElementById('fetch-complete').style.display = 'block';
+          setTimeout(() => goTo(6), 1400);
+        }
+      }, 700);
+    }, delay);
+  });
+}
+
+// LOAN OFFER
+function setTenure(months, el) {
+  document.querySelectorAll('.tenure-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  currentTenure = months;
+  const d = emiData[months];
+  document.getElementById('emi-display').textContent = '₹' + d.emi.toLocaleString('en-IN');
+  document.getElementById('total-display').textContent = '₹' + d.total.toLocaleString('en-IN');
+  el.closest('.screen-inner') && buildRepayTable(months);
+}
+function buildRepayTable(months) {
+  const principal = 1200000;
+  const rate = 13.5 / 12 / 100;
+  const emi = emiData[months].emi;
+  let bal = principal;
+  let rows = '';
+  for (let i = 1; i <= Math.min(3, months); i++) {
+    const int = Math.round(bal * rate);
+    const prin = emi - int;
+    bal -= prin;
+    rows += '<tr><td>' + i + '</td><td>₹' + emi.toLocaleString('en-IN') + '</td><td>₹' + prin.toLocaleString('en-IN') + '</td><td>₹' + int.toLocaleString('en-IN') + '</td><td>₹' + Math.max(0,bal).toLocaleString('en-IN') + '</td></tr>';
+  }
+  rows += '<tr><td style="color:var(--gray);font-style:italic;" colspan="5">... ' + (months-3) + ' more instalments</td></tr>';
+  document.getElementById('repay-tbody').innerHTML = rows;
+}
+
+// AGREEMENT
+function toggleCheck(el) {
+  const box = el.querySelector('.checklist-box');
+  box.classList.toggle('checked');
+  box.textContent = box.classList.contains('checked') ? '✓' : '';
+}
+function eSign() {
+  showLoading('Initiating Aadhaar eSign...', () => {
+    showLoading('OTP verified. Signing agreement...', () => {
+      showLoading('Agreement executed successfully!', () => goTo(8), 1200);
+    }, 1400);
+  }, 1400);
+}
+
+// EMANDATE
+function selectMandate(type) {
+  ['upi','nach','debit'].forEach(t => {
+    document.getElementById('mandate-'+t).classList.remove('selected');
+  });
+  document.getElementById('mandate-'+type).classList.add('selected');
+  document.getElementById('upi-field').style.display = type === 'upi' ? 'block' : 'none';
+}
+
+function setupMandate() {
+  showLoading('Registering mandate...', () => {
+    showLoading('Verifying account ownership...', () => {
+      showLoading('Mandate activated!', () => goTo(9), 1000);
+    }, 1200);
+  }, 1600);
+}
+
+// CONFETTI
+function fireConfetti() {
+  const container = document.getElementById('confetti-container');
+  const colors = ['#FEBD3D','#017874','#1A1A2E','#10B981','#EF4444','#8B5CF6','#F97316'];
+  for (let i = 0; i < 90; i++) {
+    setTimeout(() => {
+      const p = document.createElement('div');
+      const size = Math.random() * 10 + 6;
+      p.style.cssText = `
+        position:absolute;
+        width:${size}px;height:${size * (Math.random() > 0.5 ? 0.4 : 1)}px;
+        background:${colors[Math.floor(Math.random()*colors.length)]};
+        left:${Math.random()*100}%;
+        top:-20px;
+        border-radius:${Math.random() > 0.5 ? '50%' : '2px'};
+        opacity:0.9;
+        animation: fall ${Math.random()*2+2}s linear forwards;
+        transform: rotate(${Math.random()*360}deg);
+      `;
+      container.appendChild(p);
+      setTimeout(() => p.remove(), 4000);
+    }, i * 40);
+  }
+  const style = document.createElement('style');
+  style.textContent = '@keyframes fall { to { top: 110%; transform: rotate(720deg); opacity: 0; } }';
+  document.head.appendChild(style);
+}
+
+// INIT
+updateProgress(1);
+document.getElementById('upi-field').style.display = 'block';
+
+// Pre-fill OTP for demo
+setTimeout(() => {
+  const boxes = document.querySelectorAll('.otp-box');
+  ['1','2','3','4','5','6'].forEach((v,i) => {
+    boxes[i].value = v;
+    boxes[i].classList.add('filled');
+  });
+}, 800);
+
+// Pre-fill KYC for demo
+setTimeout(() => {
+  const pan = document.getElementById('pan-input');
+  if (pan) { pan.value = 'BSZPJ7891K'; checkPAN(); }
+  const aad = document.getElementById('aadhaar-input');
+  if (aad) { aad.value = '9876 5432 7891'; checkAadhaar(); }
+}, 500);
+</script>
+</body>
+</html>
