@@ -585,6 +585,8 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
       <div class="step-dot" id="dot-7"></div>
       <div class="step-dot" id="dot-8"></div>
       <div class="step-dot" id="dot-9"></div>
+      <div class="step-dot" id="dot-10"></div>
+      <div class="step-dot" id="dot-11"></div>
       <div id="step-label" class="step-label">Step 1/9</div>
     </div>
   </header>
@@ -621,14 +623,105 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
         </div>
       </div>
 
-      <div class="uli-strip">
-        <i class="fa-solid fa-shield-halved uli-strip-icon"></i>
-        <div class="uli-strip-text">Your session is secured by <span>Sinch Bank</span> & <span>ULI</span> encryption</div>
-      </div>
     </div>
     <div class="btn-fixed">
       <button class="btn btn-primary" onclick="verifyOTP()">
         <i class="fa-solid fa-lock-open"></i> Verify & Continue
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 1B: GST / UDYAM LOOKUP -->
+  <div class="screen" id="screen-1b">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 2 OF 12</p>
+      <h1 class="screen-title">Business<br>Verification</h1>
+      <p class="screen-sub">Provide your GST or Udyam registration number to verify your business</p>
+
+      <div class="uli-strip" style="margin-bottom:20px;">
+        <i class="fa-solid fa-database uli-strip-icon"></i>
+        <div class="uli-strip-text">Details will be fetched instantly via <span>ULIP</span> — Unified Lending Interface Protocol</div>
+      </div>
+
+      <div style="display:flex;gap:8px;margin-bottom:20px;" id="biz-tabs">
+        <div class="tenure-tab active" id="tab-gst" onclick="switchBizTab('gst')" style="font-size:13px;">GST Number</div>
+        <div class="tenure-tab" id="tab-udyam" onclick="switchBizTab('udyam')" style="font-size:13px;">Udyam Number</div>
+      </div>
+
+      <!-- GST Field -->
+      <div id="gst-field">
+        <div class="form-group">
+          <label class="form-label">GST Identification Number (GSTIN)</label>
+          <input class="form-input verified" id="gst-input" type="text" value="29AAGCR0625L1ZN" style="text-transform:uppercase;letter-spacing:1.5px;font-family:var(--mono);" oninput="this.value=this.value.toUpperCase()">
+          <!-- <div style="margin-top:8px;">
+            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Pre-filled from WhatsApp profile</span>
+          </div> -->
+        </div>
+
+        <div class="card" style="padding:16px;border-color:rgba(1,120,116,0.2);background:var(--green-light);">
+          <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;font-weight:700;margin-bottom:12px;">Fetched Business Details</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">Business Name</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">Piyush Traders Pvt Ltd</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">GST Status</span>
+              <span style="font-size:12px;font-weight:700;color:var(--success);">● Active</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">Registered Since</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">April 2018</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">Business Type</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">Wholesale Trade</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">State</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">Karnataka</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Udyam Field -->
+      <div id="udyam-field" style="display:none;">
+        <div class="form-group">
+          <label class="form-label">Udyam Registration Number</label>
+          <input class="form-input verified" id="udyam-input" type="text" value="UDYAM-KA-03-0012345" style="text-transform:uppercase;letter-spacing:1px;font-family:var(--mono);" oninput="this.value=this.value.toUpperCase()">
+          <!-- <div style="margin-top:8px;">
+            <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Pre-filled from WhatsApp profile</span>
+          </div> -->
+        </div>
+
+        <div class="card" style="padding:16px;border-color:rgba(1,120,116,0.2);background:var(--green-light);">
+          <div style="font-size:11px;color:var(--gray);text-transform:uppercase;letter-spacing:0.8px;font-weight:700;margin-bottom:12px;">Fetched Business Details</div>
+          <div style="display:flex;flex-direction:column;gap:10px;">
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">Enterprise Name</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">Piyush Traders Pvt Ltd</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">Category</span>
+              <span style="font-size:12px;font-weight:700;color:var(--green);">Micro Enterprise</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">Registration Date</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">12 Jun 2020</span>
+            </div>
+            <div style="display:flex;justify-content:space-between;">
+              <span style="font-size:12px;color:var(--gray);font-weight:500;">NIC Activity</span>
+              <span style="font-size:13px;font-weight:700;color:var(--dark);">Retail Trade</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="proceedBizVerify()">
+        <i class="fa-solid fa-arrow-right"></i> Proceed
       </button>
     </div>
   </div>
@@ -694,7 +787,7 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
       </div>
     </div>
     <div class="btn-fixed">
-      <button class="btn btn-primary" onclick="goTo(3)">
+      <button class="btn btn-primary" onclick="goToNamed('screen-3')">
         <i class="fa-solid fa-arrow-right"></i> Continue to Apply
       </button>
     </div>
@@ -778,6 +871,49 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
     </div>
   </div>
 
+  <!-- SCREEN 3B: CONSENT OTP -->
+  <div class="screen" id="screen-3b">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 3B OF 11</p>
+      <h1 class="screen-title">Confirm Consent<br>via OTP</h1>
+      <p class="screen-sub">Enter the OTP sent to your registered mobile to authorise ULI data access</p>
+
+      <div class="phone-display">
+        <i class="fa-solid fa-mobile-screen-button phone-icon"></i>
+        <div>
+          <div class="phone-num">+91 98765 43210</div>
+          <div class="phone-label">Aadhaar-linked mobile number</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Enter 6-Digit Consent OTP</label>
+        <div class="otp-grid" id="consent-otp-grid">
+          <input class="otp-box consent-otp" maxlength="1" type="tel">
+          <input class="otp-box consent-otp" maxlength="1" type="tel">
+          <input class="otp-box consent-otp" maxlength="1" type="tel">
+          <input class="otp-box consent-otp" maxlength="1" type="tel">
+          <input class="otp-box consent-otp" maxlength="1" type="tel">
+          <input class="otp-box consent-otp" maxlength="1" type="tel">
+        </div>
+        <div class="resend-row">
+          <span style="font-size:12px;color:var(--gray);">Didn't receive OTP? </span>
+          <button class="resend-btn" onclick="showToast('Consent OTP resent!')">Resend OTP</button>
+        </div>
+      </div>
+
+      <div style="background:#FFF8E7;border:1.5px solid rgba(254,189,61,0.4);border-radius:var(--radius-sm);padding:14px;font-size:12px;color:#92400e;line-height:1.6;">
+        <i class="fa-solid fa-circle-info" style="margin-right:6px;"></i>
+        This OTP confirms your consent for <strong>Sinch Bank</strong> to securely fetch your business & financial data via <strong>ULI</strong>, as per RBI guidelines.
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="verifyConsentOTP()">
+        <i class="fa-solid fa-shield-halved"></i> Confirm & Proceed
+      </button>
+    </div>
+  </div>
+
   <!-- SCREEN 4: KYC -->
   <div class="screen" id="screen-4">
     <div class="screen-inner">
@@ -788,17 +924,17 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
       <div class="form-group">
         <label class="form-label">PAN Number</label>
         <div class="input-row">
-          <input class="form-input" id="pan-input" type="text" maxlength="10" placeholder="ABCDE1234F" style="text-transform:uppercase;letter-spacing:2px;font-family:var(--mono);" oninput="this.value=this.value.toUpperCase();checkPAN()">
+          <input class="form-input verified" id="pan-input" type="text" value="BSZPJ••••K" readonly style="letter-spacing:2px;font-family:var(--mono);color:var(--dark);">
         </div>
-        <div id="pan-status" style="margin-top:8px;display:none;">
-          <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> PAN Verified – Piyush Kumar Jain</span>
+        <div id="pan-status" style="margin-top:8px;display:block;">
+          <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> PAN Verified – Piyush Kumar</span>
         </div>
       </div>
 
       <div class="form-group">
         <label class="form-label">Aadhaar Number</label>
-        <input class="form-input" id="aadhaar-input" type="tel" maxlength="14" placeholder="XXXX XXXX XXXX" oninput="formatAadhaar(this);checkAadhaar()">
-        <div id="aadhaar-status" style="margin-top:8px;display:none;">
+        <input class="form-input verified" id="aadhaar-input" type="text" value="XXXX XXXX 7891" readonly style="letter-spacing:2px;font-family:var(--mono);color:var(--dark);">
+        <div id="aadhaar-status" style="margin-top:8px;display:block;">
           <span class="verified-badge"><i class="fa-solid fa-circle-check"></i> Aadhaar Verified</span>
         </div>
       </div>
@@ -815,7 +951,59 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
     </div>
     <div class="btn-fixed">
       <button class="btn btn-primary" onclick="verifyKYC()">
-        <i class="fa-solid fa-fingerprint"></i> Verify Identity
+        <i class="fa-solid fa-arrow-right"></i> Proceed
+      </button>
+    </div>
+  </div>
+
+  <!-- SCREEN 4B: AADHAAR OTP -->
+  <div class="screen" id="screen-4b">
+    <div class="screen-inner">
+      <p style="font-size:11px;color:var(--gray);font-weight:600;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">STEP 4B OF 11</p>
+      <h1 class="screen-title">Aadhaar OTP<br>Verification</h1>
+      <p class="screen-sub">Enter the OTP sent to your Aadhaar-linked mobile number by UIDAI</p>
+
+      <div class="card card-dark" style="margin-bottom:20px;">
+        <div style="display:flex;align-items:center;gap:12px;">
+          <div style="background:rgba(254,189,61,0.15);border-radius:10px;width:44px;height:44px;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+            <i class="fa-solid fa-id-card" style="color:var(--yellow);font-size:20px;"></i>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:white;">Aadhaar Verification</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.5);margin-top:2px;">XXXX XXXX 7891</div>
+          </div>
+          <div style="margin-left:auto;">
+            <span style="background:rgba(254,189,61,0.15);border:1px solid rgba(254,189,61,0.4);color:var(--yellow);font-size:10px;font-weight:700;padding:4px 8px;border-radius:20px;">UIDAI</span>
+          </div>
+        </div>
+        <div style="height:1px;background:rgba(255,255,255,0.1);margin:14px 0;"></div>
+        <div style="font-size:11px;color:rgba(255,255,255,0.5);">OTP sent to mobile ending <strong style="color:rgba(255,255,255,0.8);">**210</strong></div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Enter 6-Digit Aadhaar OTP</label>
+        <div class="otp-grid" id="aadhaar-otp-grid">
+          <input class="otp-box aadhaar-otp" maxlength="1" type="tel">
+          <input class="otp-box aadhaar-otp" maxlength="1" type="tel">
+          <input class="otp-box aadhaar-otp" maxlength="1" type="tel">
+          <input class="otp-box aadhaar-otp" maxlength="1" type="tel">
+          <input class="otp-box aadhaar-otp" maxlength="1" type="tel">
+          <input class="otp-box aadhaar-otp" maxlength="1" type="tel">
+        </div>
+        <div class="resend-row">
+          <span style="font-size:12px;color:var(--gray);">OTP not received? </span>
+          <button class="resend-btn" onclick="showToast('Aadhaar OTP resent via UIDAI!')">Resend OTP</button>
+        </div>
+      </div>
+
+      <div class="uli-strip">
+        <i class="fa-solid fa-fingerprint uli-strip-icon"></i>
+        <div class="uli-strip-text">OTP-based Aadhaar verification powered by <span>UIDAI</span> — secure & instant</div>
+      </div>
+    </div>
+    <div class="btn-fixed">
+      <button class="btn btn-primary" onclick="verifyAadhaarOTP()">
+        <i class="fa-solid fa-fingerprint"></i> Verify Aadhaar OTP
       </button>
     </div>
   </div>
@@ -936,12 +1124,11 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
       </div>
     </div>
     <div class="btn-fixed">
-      <button class="btn btn-primary" onclick="goTo(7)">
+      <button class="btn btn-primary" onclick="goToNamed('screen-7')">
         <i class="fa-solid fa-check-circle"></i> Accept This Offer
       </button>
       <div style="display:flex;gap:10px;">
         <button class="btn btn-outline btn-sm" style="flex:1;" onclick="showToast('A callback has been scheduled!')"><i class="fa-solid fa-phone"></i> Request Callback</button>
-        <button class="btn btn-ghost btn-sm" style="flex:1;" onclick="showToast('Progress saved!')"><i class="fa-solid fa-bookmark"></i> Save for Later</button>
       </div>
     </div>
   </div>
@@ -956,7 +1143,7 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
       <div class="agreement-scroll" id="agreement-scroll" onscroll="checkScroll(this)">
         <strong>LOAN AGREEMENT</strong><br>
         Lender: Sinch Bank, a scheduled commercial bank regulated by RBI<br>
-        Borrower: Piyush Kumar Jain (Piyush Traders)<br>
+        Borrower: Piyush Kumar (Piyush Traders)<br>
         Date: 29 April 2026<br><br>
         <strong>1. Loan Details</strong><br>
         Sanctioned Amount: ₹12,00,000 | Rate: 13.5% p.a. reducing balance | Tenure: 24 months | EMI: ₹57,451<br><br>
@@ -1022,30 +1209,14 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
         <div style="font-size:11px;color:rgba(255,255,255,0.5);">Starting 29 May 2026 • 24 instalments</div>
       </div>
 
-      <div class="section-divider">Select Repayment Mode</div>
+      <div class="section-divider">Repayment Mode</div>
 
-      <div class="mandate-option selected" id="mandate-upi" onclick="selectMandate('upi')">
-        <div class="mandate-radio"></div>
-        <span class="mandate-icon">⚡</span>
-        <div class="mandate-info">
-          <div class="mandate-name">UPI Autopay</div>
-          <div class="mandate-desc">Via UPI ID – instant setup, no bank visit needed</div>
-        </div>
-      </div>
-      <div class="mandate-option" id="mandate-nach" onclick="selectMandate('nach')">
+      <div class="mandate-option selected" id="mandate-nach" onclick="selectMandate('nach')">
         <div class="mandate-radio"></div>
         <span class="mandate-icon">🏛️</span>
         <div class="mandate-info">
           <div class="mandate-name">NACH Mandate</div>
           <div class="mandate-desc">National Automated Clearing House – bank direct debit</div>
-        </div>
-      </div>
-      <div class="mandate-option" id="mandate-debit" onclick="selectMandate('debit')">
-        <div class="mandate-radio"></div>
-        <span class="mandate-icon">💳</span>
-        <div class="mandate-info">
-          <div class="mandate-name">Bank Auto-Debit</div>
-          <div class="mandate-desc">Standing instruction on your savings account</div>
         </div>
       </div>
 
@@ -1057,12 +1228,6 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
       <div class="form-group">
         <label class="form-label">Bank & IFSC</label>
         <input class="form-input verified" type="text" value="HDFC Bank — HDFC0001234" readonly>
-      </div>
-      <div id="upi-field">
-        <div class="form-group">
-          <label class="form-label">UPI ID</label>
-          <input class="form-input" type="text" value="piyush.traders@okhdfc" id="upi-id-input">
-        </div>
       </div>
     </div>
     <div class="btn-fixed">
@@ -1144,7 +1309,8 @@ html, body { height: 100%; background: #f0f4f4; font-family: var(--font); }
 
 <script>
 let currentScreen = 1;
-const TOTAL = 9;
+const TOTAL = 11;
+const SCREEN_ORDER = ['screen-1','screen-1b','screen-2','screen-3','screen-3b','screen-4','screen-5','screen-6','screen-7','screen-8','screen-9'];
 
 const emiData = {
   12: { emi: 107337, total: 1288044, label: '12 months @ 13.5% p.a.' },
@@ -1163,15 +1329,21 @@ function updateProgress(n) {
   document.getElementById('step-label').textContent = 'Step ' + n + '/' + TOTAL;
 }
 
-function goTo(n) {
-  document.getElementById('screen-' + currentScreen).classList.remove('active');
-  currentScreen = n;
-  document.getElementById('screen-' + n).classList.add('active');
-  updateProgress(n);
+function goToNamed(screenId) {
+  const oldId = SCREEN_ORDER[currentScreen - 1];
+  document.getElementById(oldId).classList.remove('active');
+  const newIdx = SCREEN_ORDER.indexOf(screenId);
+  currentScreen = newIdx + 1;
+  document.getElementById(screenId).classList.add('active');
+  updateProgress(currentScreen);
   window.scrollTo(0,0);
-  if (n === 5) startDataFetch();
-  if (n === 6) buildRepayTable(24);
-  if (n === 9) fireConfetti();
+  if (screenId === 'screen-5') startDataFetch();
+  if (screenId === 'screen-6') buildRepayTable(24);
+  if (screenId === 'screen-9') fireConfetti();
+}
+
+function goTo(screenId) {
+  goToNamed(screenId);
 }
 
 function showLoading(msg, cb, delay) {
@@ -1188,24 +1360,60 @@ function showToast(msg) {
   setTimeout(() => t.classList.remove('show'), 2800);
 }
 
-// OTP SCREEN
-document.querySelectorAll('.otp-box').forEach((box, i, all) => {
-  box.addEventListener('input', e => {
-    if (e.target.value) {
-      box.classList.add('filled');
-      if (i < all.length - 1) all[i+1].focus();
-    } else box.classList.remove('filled');
+// OTP BOX HANDLERS — scoped per grid
+function initOTPGrid(gridSelector, boxes) {
+  boxes.forEach((box, i) => {
+    box.addEventListener('input', e => {
+      if (e.target.value) {
+        box.classList.add('filled');
+        if (i < boxes.length - 1) boxes[i+1].focus();
+      } else box.classList.remove('filled');
+    });
+    box.addEventListener('keydown', e => {
+      if (e.key === 'Backspace' && !box.value && i > 0) boxes[i-1].focus();
+    });
   });
-  box.addEventListener('keydown', e => {
-    if (e.key === 'Backspace' && !box.value && i > 0) all[i-1].focus();
-  });
-});
+}
+
+const loginBoxes    = [...document.querySelectorAll('#otp-grid .otp-box')];
+const consentBoxes  = [...document.querySelectorAll('#consent-otp-grid .consent-otp')];
+const aadhaarBoxes  = [...document.querySelectorAll('#aadhaar-otp-grid .aadhaar-otp')];
+
+initOTPGrid('#otp-grid', loginBoxes);
+initOTPGrid('#consent-otp-grid', consentBoxes);
+initOTPGrid('#aadhaar-otp-grid', aadhaarBoxes);
 
 function verifyOTP() {
-  const boxes = document.querySelectorAll('.otp-box');
-  const otp = [...boxes].map(b => b.value).join('');
+  const otp = loginBoxes.map(b => b.value).join('');
   if (otp.length < 6) { showToast('Please enter all 6 digits'); return; }
-  showLoading('Verifying OTP...', () => goTo(2), 1500);
+  showLoading('Verifying OTP...', () => goToNamed('screen-1b'), 1500);
+}
+
+function switchBizTab(tab) {
+  document.getElementById('tab-gst').classList.toggle('active', tab === 'gst');
+  document.getElementById('tab-udyam').classList.toggle('active', tab === 'udyam');
+  document.getElementById('gst-field').style.display = tab === 'gst' ? 'block' : 'none';
+  document.getElementById('udyam-field').style.display = tab === 'udyam' ? 'block' : 'none';
+}
+
+function proceedBizVerify() {
+  showLoading('Fetching details via ULIP...', () => {
+    showLoading('Business verified successfully!', () => goToNamed('screen-2'), 1000);
+  }, 1800);
+}
+
+function verifyConsentOTP() {
+  const otp = consentBoxes.map(b => b.value).join('');
+  if (otp.length < 6) { showToast('Please enter all 6 digits'); return; }
+  showLoading('Confirming ULI consent...', () => goToNamed('screen-4'), 1400);
+}
+
+function verifyAadhaarOTP() {
+  const otp = aadhaarBoxes.map(b => b.value).join('');
+  if (otp.length < 6) { showToast('Please enter all 6 digits'); return; }
+  showLoading('Verifying Aadhaar OTP...', () => {
+    showLoading('Identity confirmed!', () => goToNamed('screen-5'), 900);
+  }, 1500);
 }
 
 // CONSENT
@@ -1215,11 +1423,7 @@ function toggleConsent(el) {
 }
 
 function confirmConsent() {
-  showLoading('Sending consent OTP...', () => {
-    setTimeout(() => {
-      showLoading('Confirming consent...', () => goTo(4), 1000);
-    }, 200);
-  }, 1200);
+  showLoading('Sending consent OTP...', () => goToNamed('screen-3b'), 1400);
 }
 
 // KYC
@@ -1253,7 +1457,7 @@ function checkAadhaar() {
 }
 function verifyKYC() {
   showLoading('Verifying PAN...', () => {
-    showLoading('Verifying Aadhaar via UIDAI...', () => goTo(5), 1600);
+    showLoading('Verifying Aadhaar via UIDAI...', () => goToNamed('screen-5'), 1400);
   }, 1400);
 }
 
@@ -1273,7 +1477,7 @@ function startDataFetch() {
         item.querySelector('.fetch-indicator').innerHTML = '<div class="check-circle">✓</div>';
         if (i === items.length - 1) {
           document.getElementById('fetch-complete').style.display = 'block';
-          setTimeout(() => goTo(6), 1400);
+          setTimeout(() => goToNamed('screen-6'), 1400);
         }
       }, 700);
     }, delay);
@@ -1315,24 +1519,21 @@ function toggleCheck(el) {
 function eSign() {
   showLoading('Initiating Aadhaar eSign...', () => {
     showLoading('OTP verified. Signing agreement...', () => {
-      showLoading('Agreement executed successfully!', () => goTo(8), 1200);
+      showLoading('Agreement executed successfully!', () => goToNamed('screen-8'), 1200);
     }, 1400);
   }, 1400);
 }
 
 // EMANDATE
 function selectMandate(type) {
-  ['upi','nach','debit'].forEach(t => {
-    document.getElementById('mandate-'+t).classList.remove('selected');
-  });
-  document.getElementById('mandate-'+type).classList.add('selected');
-  document.getElementById('upi-field').style.display = type === 'upi' ? 'block' : 'none';
+  document.getElementById('mandate-nach').classList.remove('selected');
+  document.getElementById('mandate-' + type).classList.add('selected');
 }
 
 function setupMandate() {
-  showLoading('Registering mandate...', () => {
+  showLoading('Registering NACH mandate...', () => {
     showLoading('Verifying account ownership...', () => {
-      showLoading('Mandate activated!', () => goTo(9), 1000);
+      showLoading('Mandate activated!', () => goToNamed('screen-9'), 1000);
     }, 1200);
   }, 1600);
 }
@@ -1367,24 +1568,21 @@ function fireConfetti() {
 
 // INIT
 updateProgress(1);
-document.getElementById('upi-field').style.display = 'block';
 
-// Pre-fill OTP for demo
+// Pre-fill OTP boxes for demo
 setTimeout(() => {
-  const boxes = document.querySelectorAll('.otp-box');
   ['1','2','3','4','5','6'].forEach((v,i) => {
-    boxes[i].value = v;
-    boxes[i].classList.add('filled');
+    loginBoxes[i].value = v;
+    loginBoxes[i].classList.add('filled');
+  });
+  ['2','4','6','8','1','3'].forEach((v,i) => {
+    consentBoxes[i].value = v;
+    consentBoxes[i].classList.add('filled');
+  });
+  ['7','7','2','4','5','1'].forEach((v,i) => {
+    if (aadhaarBoxes[i]) { aadhaarBoxes[i].value = v; aadhaarBoxes[i].classList.add('filled'); }
   });
 }, 800);
-
-// Pre-fill KYC for demo
-setTimeout(() => {
-  const pan = document.getElementById('pan-input');
-  if (pan) { pan.value = 'BSZPJ7891K'; checkPAN(); }
-  const aad = document.getElementById('aadhaar-input');
-  if (aad) { aad.value = '9876 5432 7891'; checkAadhaar(); }
-}, 500);
 </script>
 </body>
 </html>
